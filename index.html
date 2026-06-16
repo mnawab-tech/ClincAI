@@ -1,0 +1,1360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Clinical AI Specialist — 90 Day Journey</title>
+<style>
+  :root {
+    --bg: #faf6f0;
+    --surface: #ffffff;
+    --surface2: #f3ece2;
+    --border: #e6dccd;
+    --accent: #c2784f;
+    --accent2: #6b8e5a;
+    --accent3: #c0563f;
+    --text: #3d3530;
+    --text2: #8a7d70;
+    --gold: #d9a441;
+    --radius: 12px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; min-height: 100vh; }
+
+  /* NAV */
+  nav { background: var(--surface); border-bottom: 1px solid var(--border); padding: 0 24px; display: flex; align-items: center; gap: 0; position: sticky; top: 0; z-index: 100; }
+  .nav-brand { font-weight: 700; font-size: 1.1rem; color: var(--accent); padding: 16px 0; margin-right: 32px; white-space: nowrap; }
+  .nav-brand span { color: var(--accent2); }
+  .nav-tabs { display: flex; gap: 4px; }
+  .nav-tab { padding: 16px 18px; cursor: pointer; color: var(--text2); font-size: 0.88rem; font-weight: 500; border-bottom: 2px solid transparent; transition: all .2s; background: none; border-top: none; border-left: none; border-right: none; }
+  .nav-tab:hover { color: var(--text); }
+  .nav-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+  .nav-right { margin-left: auto; display: flex; align-items: center; gap: 12px; font-size: 0.85rem; color: var(--text2); }
+  .streak-badge { background: linear-gradient(135deg, #ff6b35, var(--gold)); color: #000; font-weight: 700; padding: 4px 12px; border-radius: 20px; font-size: 0.82rem; }
+
+  /* PAGES */
+  .page { display: none; padding: 24px; max-width: 1200px; margin: 0 auto; }
+  .page.active { display: block; }
+
+  /* DASHBOARD */
+  .hero { background: linear-gradient(135deg, #fff8ef 0%, #f3e7d6 100%); border: 1px solid var(--border); border-radius: var(--radius); padding: 32px; margin-bottom: 24px; position: relative; overflow: hidden; }
+  .hero::before { content: ''; position: absolute; top: -50px; right: -50px; width: 200px; height: 200px; background: radial-gradient(circle, rgba(194,120,79,0.18) 0%, transparent 70%); }
+  .hero h1 { font-size: 1.8rem; font-weight: 800; margin-bottom: 6px; }
+  .hero h1 span { color: var(--accent2); }
+  .hero p { color: var(--text2); margin-bottom: 20px; }
+  .hero-stats { display: flex; gap: 32px; flex-wrap: wrap; }
+  .hero-stat { }
+  .hero-stat .val { font-size: 2rem; font-weight: 800; color: var(--accent); }
+  .hero-stat .lbl { font-size: 0.78rem; color: var(--text2); text-transform: uppercase; letter-spacing: .05em; }
+
+  .progress-bar-wrap { margin-top: 20px; }
+  .progress-bar-wrap .lbl { display: flex; justify-content: space-between; font-size: 0.82rem; color: var(--text2); margin-bottom: 6px; }
+  .progress-bar { height: 10px; background: var(--border); border-radius: 99px; overflow: hidden; }
+  .progress-fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent2)); border-radius: 99px; transition: width .4s; }
+
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px; }
+  .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 24px; }
+  @media(max-width:800px) { .grid-3,.grid-2 { grid-template-columns: 1fr; } }
+
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; }
+  .card h3 { font-size: 0.82rem; color: var(--text2); text-transform: uppercase; letter-spacing: .05em; margin-bottom: 12px; }
+
+  /* CALENDAR */
+  .calendar-grid { display: grid; grid-template-columns: repeat(13, 1fr); gap: 3px; }
+  .cal-day { width: 100%; aspect-ratio: 1; border-radius: 3px; background: var(--border); cursor: pointer; transition: transform .15s; position: relative; }
+  .cal-day:hover { transform: scale(1.3); z-index: 1; }
+  .cal-day.studied { background: var(--accent2); }
+  .cal-day.today { box-shadow: 0 0 0 2px var(--gold); }
+  .cal-day.missed { background: #e9c9c0; }
+  .cal-day.future { background: var(--surface2); opacity: .4; cursor: default; }
+
+  /* TOPIC LIST */
+  .phase-label { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--accent); margin: 20px 0 10px; }
+  .topic-item { display: flex; align-items: center; gap: 12px; padding: 12px 16px; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; margin-bottom: 8px; cursor: pointer; transition: border-color .2s; }
+  .topic-item:hover { border-color: var(--accent); }
+  .topic-item.done { border-color: var(--accent2); opacity: .7; }
+  .topic-check { width: 22px; height: 22px; border-radius: 50%; border: 2px solid var(--border); flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; }
+  .topic-item.done .topic-check { background: var(--accent2); border-color: var(--accent2); color: #000; }
+  .topic-name { font-size: 0.92rem; flex: 1; }
+  .topic-item.done .topic-name { text-decoration: line-through; color: var(--text2); }
+  .topic-meta { font-size: 0.75rem; color: var(--text2); }
+  .topic-actions { display: flex; gap: 8px; }
+
+  /* STUDY LOG */
+  .log-form { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; margin-bottom: 24px; }
+  .log-form h2 { font-size: 1.1rem; margin-bottom: 16px; }
+  .form-row { margin-bottom: 14px; }
+  .form-row label { display: block; font-size: 0.82rem; color: var(--text2); margin-bottom: 5px; }
+  .form-row input, .form-row textarea, .form-row select { width: 100%; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; color: var(--text); padding: 10px 14px; font-size: 0.92rem; font-family: inherit; outline: none; transition: border-color .2s; }
+  .form-row input:focus, .form-row textarea:focus, .form-row select:focus { border-color: var(--accent); }
+  .form-row textarea { min-height: 100px; resize: vertical; }
+  .btn { padding: 10px 22px; border-radius: 8px; border: none; cursor: pointer; font-size: 0.9rem; font-weight: 600; transition: all .2s; }
+  .btn-primary { background: var(--accent); color: #fff; }
+  .btn-primary:hover { background: #7c74ff; }
+  .btn-outline { background: transparent; color: var(--accent); border: 1px solid var(--accent); }
+  .btn-outline:hover { background: var(--accent); color: #fff; }
+  .btn-sm { padding: 6px 14px; font-size: 0.8rem; }
+  .btn-danger { background: var(--accent3); color: #fff; }
+
+  .log-entries { display: flex; flex-direction: column; gap: 12px; }
+  .log-entry { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 20px; }
+  .log-entry-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
+  .log-entry-title { font-weight: 600; font-size: 0.95rem; }
+  .log-entry-date { font-size: 0.78rem; color: var(--text2); }
+  .log-entry-body { font-size: 0.88rem; color: var(--text2); line-height: 1.6; }
+  .log-tag { display: inline-block; background: var(--surface2); border-radius: 4px; padding: 2px 8px; font-size: 0.75rem; color: var(--accent2); margin-top: 8px; margin-right: 4px; }
+  .hours-badge { background: var(--accent); color: #fff; border-radius: 4px; padding: 2px 8px; font-size: 0.75rem; font-weight: 700; }
+
+  /* QUIZ */
+  .quiz-selector { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px,1fr)); gap: 12px; margin-bottom: 24px; }
+  .quiz-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px; cursor: pointer; transition: all .2s; }
+  .quiz-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+  .quiz-card h4 { font-size: 0.92rem; margin-bottom: 6px; }
+  .quiz-card p { font-size: 0.78rem; color: var(--text2); }
+  .quiz-area { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; }
+  .quiz-progress { font-size: 0.8rem; color: var(--text2); margin-bottom: 16px; }
+  .quiz-q { font-size: 1.05rem; font-weight: 600; margin-bottom: 20px; line-height: 1.5; }
+  .quiz-options { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+  .quiz-opt { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 12px 16px; cursor: pointer; font-size: 0.9rem; transition: all .2s; text-align: left; color: var(--text); }
+  .quiz-opt:hover { border-color: var(--accent); }
+  .quiz-opt.correct { background: rgba(0,212,170,0.15); border-color: var(--accent2); color: var(--accent2); }
+  .quiz-opt.wrong { background: rgba(255,107,107,0.15); border-color: var(--accent3); color: var(--accent3); }
+  .quiz-opt.reveal { background: rgba(0,212,170,0.08); border-color: var(--accent2); }
+  .quiz-explanation { background: var(--surface2); border-radius: 8px; padding: 14px 16px; font-size: 0.88rem; color: var(--text2); line-height: 1.6; margin-bottom: 16px; border-left: 3px solid var(--accent2); }
+  .quiz-score { text-align: center; padding: 32px; }
+  .quiz-score .score-num { font-size: 3rem; font-weight: 800; color: var(--accent2); }
+
+  /* THINKING TOOLS */
+  .tool-tabs { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+  .tool-tab { padding: 8px 16px; border-radius: 20px; border: 1px solid var(--border); background: none; color: var(--text2); cursor: pointer; font-size: 0.85rem; transition: all .2s; }
+  .tool-tab.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .tool-panel { display: none; }
+  .tool-panel.active { display: block; }
+  .feynman-box { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; }
+  .feynman-step { border-left: 3px solid var(--accent); padding-left: 16px; margin-bottom: 20px; }
+  .feynman-step h4 { font-size: 0.9rem; color: var(--accent); margin-bottom: 8px; }
+  .feynman-step p { font-size: 0.82rem; color: var(--text2); margin-bottom: 10px; }
+  .reflection-q { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 16px; margin-bottom: 12px; }
+  .reflection-q p { font-size: 0.9rem; font-weight: 500; margin-bottom: 10px; color: var(--accent2); }
+  .concept-node { display: inline-block; background: var(--accent); color: #fff; border-radius: 8px; padding: 8px 16px; font-size: 0.85rem; margin: 6px; cursor: move; }
+  .concept-map-area { min-height: 200px; background: var(--surface2); border-radius: 8px; padding: 16px; position: relative; }
+  .saved-notes { display: flex; flex-direction: column; gap: 10px; max-height: 400px; overflow-y: auto; }
+  .saved-note { background: var(--surface2); border-radius: 8px; padding: 14px; font-size: 0.88rem; color: var(--text2); line-height: 1.5; }
+  .saved-note .note-meta { font-size: 0.75rem; color: var(--accent); margin-bottom: 6px; }
+
+  /* REMINDER */
+  .reminder-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; margin-bottom: 16px; }
+  .toggle { position: relative; display: inline-block; width: 44px; height: 24px; }
+  .toggle input { opacity: 0; width: 0; height: 0; }
+  .slider { position: absolute; inset: 0; background: var(--border); border-radius: 24px; cursor: pointer; transition: .2s; }
+  .slider:before { content: ''; position: absolute; height: 18px; width: 18px; left: 3px; bottom: 3px; background: #fff; border-radius: 50%; transition: .2s; }
+  input:checked + .slider { background: var(--accent2); }
+  input:checked + .slider:before { transform: translateX(20px); }
+
+  /* TOASTS */
+  #toast { position: fixed; bottom: 24px; right: 24px; background: var(--accent2); color: #000; padding: 12px 20px; border-radius: 8px; font-weight: 600; font-size: 0.88rem; opacity: 0; pointer-events: none; transition: opacity .3s; z-index: 999; }
+  #toast.show { opacity: 1; }
+
+  .empty-state { text-align: center; padding: 48px 24px; color: var(--text2); }
+  .empty-state .icon { font-size: 3rem; margin-bottom: 12px; }
+  .chip { display: inline-block; background: var(--surface2); border: 1px solid var(--border); border-radius: 20px; padding: 3px 10px; font-size: 0.75rem; color: var(--text2); margin-right: 4px; }
+  .chip.green { border-color: var(--accent2); color: var(--accent2); }
+  .chip.purple { border-color: var(--accent); color: var(--accent); }
+
+  .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+  .section-header h2 { font-size: 1.1rem; }
+  .divider { height: 1px; background: var(--border); margin: 20px 0; }
+  .text-muted { color: var(--text2); font-size: 0.85rem; }
+  .mt-16 { margin-top: 16px; }
+  .mb-16 { margin-bottom: 16px; }
+  .flex { display: flex; }
+  .gap-8 { gap: 8px; }
+  .items-center { align-items: center; }
+  .justify-between { justify-content: space-between; }
+  input[type="time"], input[type="date"] { color-scheme: light; }
+
+  /* CALENDAR PAGE */
+  .cal-phase-title { font-size:.78rem; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:var(--accent); margin:24px 0 12px; }
+  .cal-month-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(130px,1fr)); gap:10px; }
+  .cal-card { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:12px; cursor:pointer; transition:all .18s; position:relative; min-height:96px; }
+  .cal-card:hover { border-color:var(--accent); transform:translateY(-2px); box-shadow:0 4px 12px rgba(0,0,0,.06); }
+  .cal-card .day-num { font-size:.72rem; font-weight:700; color:var(--accent); margin-bottom:4px; }
+  .cal-card .day-focus { font-size:.78rem; line-height:1.4; color:var(--text); display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; }
+  .cal-card.studied { border-color:var(--accent2); background:rgba(107,142,90,.08); }
+  .cal-card.studied::after { content:'✓'; position:absolute; top:8px; right:10px; color:var(--accent2); font-weight:700; font-size:.85rem; }
+  .cal-card.today { box-shadow:0 0 0 2px var(--gold); }
+  .cal-card.missed { background:rgba(192,86,63,.06); }
+  .cal-card.future { opacity:.72; }
+
+  .modal-overlay { display:none; position:fixed; inset:0; background:rgba(61,53,48,.45); z-index:500; align-items:center; justify-content:center; padding:20px; }
+  .modal-overlay.show { display:flex; }
+  .modal-box { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:24px; max-width:520px; width:100%; max-height:80vh; overflow-y:auto; }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand">Clinical<span>AI</span> · 90 Days</div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="showPage('dashboard')">Dashboard</button>
+    <button class="nav-tab" onclick="showPage('topics')">Topics</button>
+    <button class="nav-tab" onclick="showPage('calendar')">Calendar</button>
+    <button class="nav-tab" onclick="showPage('log')">Study Log</button>
+    <button class="nav-tab" onclick="showPage('quiz')">Quiz</button>
+    <button class="nav-tab" onclick="showPage('thinking')">Thinking Tools</button>
+    <button class="nav-tab" onclick="showPage('reminders')">Reminders</button>
+  </div>
+  <div class="nav-right">
+    <span id="nav-streak" class="streak-badge">🔥 0 days</span>
+    <span id="nav-day" class="text-muted"></span>
+  </div>
+</nav>
+
+<!-- DASHBOARD -->
+<div class="page active" id="page-dashboard">
+  <div class="hero">
+    <h1><span>Clinical AI Specialist</span></h1>
+    <p id="hero-subtitle">Building expertise in AI for healthcare.</p>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="val" id="stat-day">1</div>
+        <div class="lbl">Current Day</div>
+      </div>
+      <div class="hero-stat">
+        <div class="val" id="stat-studied">0</div>
+        <div class="lbl">Days Studied</div>
+      </div>
+      <div class="hero-stat">
+        <div class="val" id="stat-streak">0</div>
+        <div class="lbl">Day Streak</div>
+      </div>
+      <div class="hero-stat">
+        <div class="val" id="stat-topics">0</div>
+        <div class="lbl">Topics Done</div>
+      </div>
+      <div class="hero-stat">
+        <div class="val" id="stat-hours">0h</div>
+        <div class="lbl">Hours Logged</div>
+      </div>
+    </div>
+    <div class="progress-bar-wrap">
+      <div class="lbl"><span>90-Day Progress</span><span id="progress-pct">0%</span></div>
+      <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+    </div>
+  </div>
+
+  <div class="card mb-16" id="today-plan-card" style="border-left:4px solid var(--accent);">
+    <div class="flex justify-between items-center" style="margin-bottom:12px;">
+      <h3 style="margin-bottom:0;">📌 Today's Study Plan</h3>
+      <span class="chip purple" id="today-plan-day">Day —</span>
+    </div>
+    <div id="today-plan-body"></div>
+  </div>
+
+  <div class="grid-3">
+    <div class="card">
+      <h3>Today's Focus</h3>
+      <div id="today-focus" style="font-size:.9rem; line-height:1.6;">Load your study log to see today's focus.</div>
+      <button class="btn btn-outline btn-sm mt-16" onclick="showPage('log')">Log Today</button>
+    </div>
+    <div class="card">
+      <h3>Next Topic</h3>
+      <div id="next-topic" style="font-size:.9rem; line-height:1.6; color:var(--text2);">—</div>
+      <button class="btn btn-outline btn-sm mt-16" onclick="showPage('topics')">View Topics</button>
+    </div>
+    <div class="card">
+      <h3>Quick Quiz</h3>
+      <div style="font-size:.85rem; color:var(--text2); margin-bottom:12px;">Test your knowledge with a random question</div>
+      <button class="btn btn-primary btn-sm" onclick="startRandomQuiz()">Start Quiz</button>
+    </div>
+  </div>
+
+  <div class="card mb-16">
+    <h3>90-Day Activity Map</h3>
+    <div style="margin-top:12px;">
+      <div class="calendar-grid" id="cal-grid"></div>
+      <div style="display:flex;gap:16px;margin-top:10px;font-size:.75rem;color:var(--text2);align-items:center;">
+        <span><span style="display:inline-block;width:12px;height:12px;background:var(--border);border-radius:2px;margin-right:4px;vertical-align:middle;"></span>Not yet</span>
+        <span><span style="display:inline-block;width:12px;height:12px;background:var(--accent2);border-radius:2px;margin-right:4px;vertical-align:middle;"></span>Studied</span>
+        <span><span style="display:inline-block;width:12px;height:12px;background:#e9c9c0;border-radius:2px;margin-right:4px;vertical-align:middle;"></span>Missed</span>
+        <span><span style="display:inline-block;width:12px;height:12px;border:2px solid var(--gold);border-radius:2px;margin-right:4px;vertical-align:middle;"></span>Today</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Phase Progress</h3>
+    <div id="phase-progress"></div>
+  </div>
+</div>
+
+<!-- TOPICS -->
+<div class="page" id="page-topics">
+  <div class="section-header">
+    <h2>Clinical AI Curriculum</h2>
+    <div style="font-size:.85rem;color:var(--text2);"><span id="topic-done-count">0</span> / <span id="topic-total-count">0</span> completed</div>
+  </div>
+  <div id="topics-list"></div>
+</div>
+
+<!-- CALENDAR -->
+<div class="page" id="page-calendar">
+  <div class="section-header">
+    <h2>90-Day Calendar</h2>
+    <span class="text-muted">Click any day to see its plan</span>
+  </div>
+  <div id="calendar-phases"></div>
+</div>
+
+<div id="day-modal" class="modal-overlay" onclick="closeDayModal(event)">
+  <div class="modal-box" onclick="event.stopPropagation()">
+    <div class="flex justify-between items-center mb-16">
+      <h2 id="modal-day-title" style="font-size:1.2rem;"></h2>
+      <button class="btn btn-outline btn-sm" onclick="closeDayModal()">✕</button>
+    </div>
+    <div id="modal-day-body"></div>
+  </div>
+</div>
+
+<!-- STUDY LOG -->
+<div class="page" id="page-log">
+  <div class="log-form">
+    <h2>Log Today's Study Session</h2>
+    <div class="grid-2">
+      <div class="form-row">
+        <label>Topic / Focus</label>
+        <input type="text" id="log-topic" placeholder="e.g. EHR data standards, FHIR basics...">
+      </div>
+      <div class="form-row">
+        <label>Date</label>
+        <input type="date" id="log-date">
+      </div>
+    </div>
+    <div class="grid-2">
+      <div class="form-row">
+        <label>Hours Studied</label>
+        <input type="number" id="log-hours" min="0.5" max="12" step="0.5" placeholder="e.g. 2">
+      </div>
+      <div class="form-row">
+        <label>Mood / Energy</label>
+        <select id="log-mood">
+          <option value="">Select...</option>
+          <option value="🔥 Focused">🔥 Focused</option>
+          <option value="💪 Productive">💪 Productive</option>
+          <option value="😐 Okay">😐 Okay</option>
+          <option value="😴 Tired">😴 Tired</option>
+          <option value="🤯 Overwhelmed">🤯 Overwhelmed</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row">
+      <label>What I learned today</label>
+      <textarea id="log-learned" placeholder="Summarize the key concepts you studied..."></textarea>
+    </div>
+    <div class="form-row">
+      <label>Questions / Gaps to revisit</label>
+      <textarea id="log-questions" placeholder="What's still unclear? What do I need to revisit?" style="min-height:70px;"></textarea>
+    </div>
+    <div class="form-row">
+      <label>Resources used</label>
+      <input type="text" id="log-resources" placeholder="e.g. PubMed article, Coursera module, textbook ch.3...">
+    </div>
+    <button class="btn btn-primary" onclick="saveLog()">Save Session</button>
+  </div>
+
+  <div class="section-header">
+    <h2>Study History</h2>
+    <span class="text-muted" id="log-total-days">0 sessions</span>
+  </div>
+  <div class="log-entries" id="log-entries"></div>
+</div>
+
+<!-- QUIZ -->
+<div class="page" id="page-quiz">
+  <div id="quiz-home">
+    <div class="section-header">
+      <h2>Interactive Quizzes</h2>
+      <span class="text-muted">Test & reinforce your knowledge</span>
+    </div>
+    <div class="quiz-selector" id="quiz-selector"></div>
+  </div>
+  <div id="quiz-active" style="display:none;">
+    <div class="flex justify-between items-center mb-16">
+      <div>
+        <div style="font-size:0.82rem;color:var(--text2);" id="quiz-section-label"></div>
+        <h2 id="quiz-title" style="font-size:1.1rem;"></h2>
+      </div>
+      <button class="btn btn-outline btn-sm" onclick="exitQuiz()">← Back</button>
+    </div>
+    <div class="quiz-area" id="quiz-area"></div>
+  </div>
+</div>
+
+<!-- THINKING TOOLS -->
+<div class="page" id="page-thinking">
+  <div class="section-header">
+    <h2>Thinking Tools</h2>
+    <span class="text-muted">Deepen understanding beyond memorization</span>
+  </div>
+  <div class="tool-tabs">
+    <button class="tool-tab active" onclick="switchTool('feynman')">Feynman Technique</button>
+    <button class="tool-tab" onclick="switchTool('reflection')">Daily Reflection</button>
+    <button class="tool-tab" onclick="switchTool('concepts')">Concept Builder</button>
+    <button class="tool-tab" onclick="switchTool('notes')">Saved Notes</button>
+  </div>
+
+  <!-- FEYNMAN -->
+  <div class="tool-panel active" id="tool-feynman">
+    <div class="feynman-box">
+      <p style="font-size:.85rem;color:var(--text2);margin-bottom:20px;">The Feynman Technique: explain it simply, find gaps, go back and refine. Best for complex clinical AI concepts.</p>
+      <div class="form-row mb-16">
+        <label>Concept to explain</label>
+        <input type="text" id="feynman-concept" placeholder="e.g. Transformer attention mechanism, FHIR resources, bias in AI...">
+      </div>
+      <div class="feynman-step">
+        <h4>Step 1 — Explain it simply</h4>
+        <p>Write as if you're teaching a 12-year-old. No jargon.</p>
+        <textarea class="form-row" style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);padding:10px 14px;font-size:.9rem;font-family:inherit;outline:none;min-height:100px;resize:vertical;" id="feynman-step1" placeholder="In simple terms, this concept means..."></textarea>
+      </div>
+      <div class="feynman-step">
+        <h4>Step 2 — Identify gaps</h4>
+        <p>What did you struggle to explain? What terms felt unclear?</p>
+        <textarea style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);padding:10px 14px;font-size:.9rem;font-family:inherit;outline:none;min-height:80px;resize:vertical;" id="feynman-step2" placeholder="I got stuck on... / I wasn't sure about..."></textarea>
+      </div>
+      <div class="feynman-step">
+        <h4>Step 3 — Refined explanation</h4>
+        <p>After reviewing your gaps, write a clearer version.</p>
+        <textarea style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);padding:10px 14px;font-size:.9rem;font-family:inherit;outline:none;min-height:100px;resize:vertical;" id="feynman-step3" placeholder="Now I can explain it as..."></textarea>
+      </div>
+      <div class="feynman-step">
+        <h4>Step 4 — Analogy</h4>
+        <p>Connect it to something familiar from medicine or everyday life.</p>
+        <textarea style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);padding:10px 14px;font-size:.9rem;font-family:inherit;outline:none;min-height:70px;resize:vertical;" id="feynman-step4" placeholder="This is like... in clinical practice..."></textarea>
+      </div>
+      <button class="btn btn-primary" onclick="saveFeynman()">Save Feynman Note</button>
+    </div>
+  </div>
+
+  <!-- REFLECTION -->
+  <div class="tool-panel" id="tool-reflection">
+    <div style="margin-bottom:20px;">
+      <p style="font-size:.85rem;color:var(--text2);">End-of-session reflection to consolidate learning.</p>
+    </div>
+    <div class="reflection-q">
+      <p>What was the single most important thing I learned today?</p>
+      <textarea style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);padding:10px 14px;font-size:.9rem;font-family:inherit;outline:none;min-height:80px;resize:vertical;" id="ref-q1" placeholder="The most important insight was..."></textarea>
+    </div>
+    <div class="reflection-q">
+      <p>How does this connect to clinical practice?</p>
+      <textarea style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);padding:10px 14px;font-size:.9rem;font-family:inherit;outline:none;min-height:80px;resize:vertical;" id="ref-q2" placeholder="In clinical settings, this would matter because..."></textarea>
+    </div>
+    <div class="reflection-q">
+      <p>What would I do differently next study session?</p>
+      <textarea style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);padding:10px 14px;font-size:.9rem;font-family:inherit;outline:none;min-height:80px;resize:vertical;" id="ref-q3" placeholder="Next time I will..."></textarea>
+    </div>
+    <div class="reflection-q">
+      <p>Rate your confidence on today's topic (1–5) and why</p>
+      <div style="display:flex;gap:10px;margin-bottom:10px;">
+        <button class="quiz-opt" onclick="selectConfidence(1)" id="conf-1" style="flex:1;padding:8px;">1</button>
+        <button class="quiz-opt" onclick="selectConfidence(2)" id="conf-2" style="flex:1;padding:8px;">2</button>
+        <button class="quiz-opt" onclick="selectConfidence(3)" id="conf-3" style="flex:1;padding:8px;">3</button>
+        <button class="quiz-opt" onclick="selectConfidence(4)" id="conf-4" style="flex:1;padding:8px;">4</button>
+        <button class="quiz-opt" onclick="selectConfidence(5)" id="conf-5" style="flex:1;padding:8px;">5</button>
+      </div>
+      <textarea style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);padding:10px 14px;font-size:.9rem;font-family:inherit;outline:none;min-height:60px;resize:vertical;" id="ref-q4" placeholder="My confidence is this level because..."></textarea>
+    </div>
+    <button class="btn btn-primary" onclick="saveReflection()">Save Reflection</button>
+  </div>
+
+  <!-- CONCEPT BUILDER -->
+  <div class="tool-panel" id="tool-concepts">
+    <div class="feynman-box">
+      <p style="font-size:.85rem;color:var(--text2);margin-bottom:20px;">Build concept connections. Add concepts and see how they relate in Clinical AI.</p>
+      <div style="display:flex;gap:10px;margin-bottom:16px;">
+        <input type="text" id="concept-input" style="flex:1;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);padding:10px 14px;font-size:.9rem;font-family:inherit;outline:none;" placeholder="Add a concept (e.g. 'Transformer', 'EHR', 'Bias')">
+        <button class="btn btn-primary" onclick="addConcept()">Add</button>
+      </div>
+      <div class="concept-map-area" id="concept-map">
+        <div style="color:var(--text2);font-size:.85rem;text-align:center;padding-top:60px;" id="concept-placeholder">Add concepts above to build your map</div>
+      </div>
+      <div class="form-row mt-16">
+        <label>Describe a connection between concepts</label>
+        <textarea style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);padding:10px 14px;font-size:.9rem;font-family:inherit;outline:none;min-height:80px;resize:vertical;" id="concept-connections" placeholder="e.g. Transformer → powers NLP models → reads clinical notes → extracts diagnoses (ICD codes)"></textarea>
+      </div>
+      <button class="btn btn-primary" onclick="saveConcepts()">Save Concept Map</button>
+    </div>
+  </div>
+
+  <!-- SAVED NOTES -->
+  <div class="tool-panel" id="tool-notes">
+    <div class="section-header">
+      <h2>Saved Thinking Notes</h2>
+      <button class="btn btn-outline btn-sm" onclick="clearAllNotes()">Clear All</button>
+    </div>
+    <div class="saved-notes" id="saved-notes-list"></div>
+  </div>
+</div>
+
+<!-- REMINDERS -->
+<div class="page" id="page-reminders">
+  <div class="section-header">
+    <h2>Study Reminders</h2>
+    <span class="text-muted">Browser notifications to keep you on track</span>
+  </div>
+
+  <div class="reminder-card">
+    <div class="flex justify-between items-center mb-16">
+      <div>
+        <div style="font-weight:600;margin-bottom:4px;">Daily Study Reminder</div>
+        <div style="font-size:.82rem;color:var(--text2);">Get reminded to study every day at your chosen time</div>
+      </div>
+      <label class="toggle">
+        <input type="checkbox" id="reminder-toggle" onchange="toggleReminder()">
+        <span class="slider"></span>
+      </label>
+    </div>
+    <div class="form-row">
+      <label>Reminder Time</label>
+      <input type="time" id="reminder-time" value="09:00" style="max-width:160px;">
+    </div>
+    <div class="form-row">
+      <label>Reminder Message</label>
+      <input type="text" id="reminder-msg" value="Time to study Clinical AI! 🧠 Keep your streak alive.">
+    </div>
+    <button class="btn btn-primary btn-sm" onclick="saveReminder()">Save Reminder</button>
+    <div id="reminder-status" style="margin-top:12px;font-size:.82rem;color:var(--text2);"></div>
+  </div>
+
+  <div class="reminder-card">
+    <div style="font-weight:600;margin-bottom:8px;">Notification Permission</div>
+    <div style="font-size:.82rem;color:var(--text2);margin-bottom:12px;">Browser notifications must be enabled for reminders to work.</div>
+    <button class="btn btn-outline btn-sm" onclick="requestNotifPerm()">Enable Notifications</button>
+    <span id="notif-perm-status" style="margin-left:12px;font-size:.82rem;color:var(--text2);"></span>
+  </div>
+
+  <div class="reminder-card">
+    <div style="font-weight:600;margin-bottom:8px;">Study Goal Settings</div>
+    <div class="grid-2">
+      <div class="form-row">
+        <label>Daily study goal (hours)</label>
+        <input type="number" id="goal-hours" min="0.5" max="8" step="0.5" value="2" style="max-width:120px;">
+      </div>
+      <div class="form-row">
+        <label>Start date of 90-day journey</label>
+        <input type="date" id="start-date" onchange="saveStartDate()">
+      </div>
+    </div>
+    <button class="btn btn-primary btn-sm" onclick="saveGoals()">Save Goals</button>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ── DATA LAYER ──────────────────────────────────────────────────────────────
+const DB = {
+  get: (k, d = null) => { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch { return d; } },
+  set: (k, v) => localStorage.setItem(k, JSON.stringify(v))
+};
+
+// ── CURRICULUM ─────────────────────────────────────────────────────────────
+const CURRICULUM = [
+  { phase: 1, title: 'Foundations of Clinical AI', topics: [
+    { id: 't1', name: 'Introduction to Clinical AI & History', days: '1-3' },
+    { id: 't2', name: 'Healthcare Data Types: EHR, Imaging, Genomics', days: '4-6' },
+    { id: 't3', name: 'FHIR & Interoperability Standards', days: '7-9' },
+    { id: 't4', name: 'Clinical NLP & Text Mining Basics', days: '10-12' },
+    { id: 't5', name: 'Medical Imaging & Computer Vision Overview', days: '13-15' },
+  ]},
+  { phase: 2, title: 'Machine Learning in Healthcare', topics: [
+    { id: 't6', name: 'ML Fundamentals for Clinical Data', days: '16-19' },
+    { id: 't7', name: 'Supervised Learning: Diagnosis & Prognosis Models', days: '20-22' },
+    { id: 't8', name: 'Unsupervised Learning: Patient Clustering', days: '23-25' },
+    { id: 't9', name: 'Deep Learning & Neural Nets in Medicine', days: '26-29' },
+    { id: 't10', name: 'Transformers & LLMs for Clinical Text', days: '30-33' },
+  ]},
+  { phase: 3, title: 'AI Safety, Ethics & Bias', topics: [
+    { id: 't11', name: 'Algorithmic Bias in Healthcare AI', days: '34-36' },
+    { id: 't12', name: 'Fairness, Accountability & Transparency', days: '37-39' },
+    { id: 't13', name: 'HIPAA, GDPR & Clinical AI Regulations', days: '40-42' },
+    { id: 't14', name: 'FDA Approval Pathways for AI/ML Devices', days: '43-45' },
+    { id: 't15', name: 'Explainability: SHAP, LIME, Saliency Maps', days: '46-48' },
+  ]},
+  { phase: 4, title: 'Clinical Applications', topics: [
+    { id: 't16', name: 'AI in Radiology: CXR, CT, MRI', days: '49-51' },
+    { id: 't17', name: 'AI in Pathology & Genomics', days: '52-54' },
+    { id: 't18', name: 'Clinical Decision Support Systems', days: '55-57' },
+    { id: 't19', name: 'Sepsis Prediction & ICU AI Models', days: '58-60' },
+    { id: 't20', name: 'Drug Discovery & Precision Medicine', days: '61-63' },
+  ]},
+  { phase: 5, title: 'Implementation & Research', topics: [
+    { id: 't21', name: 'Model Deployment in Clinical Environments', days: '64-66' },
+    { id: 't22', name: 'Clinical AI Research Design & Evaluation', days: '67-69' },
+    { id: 't23', name: 'Human-AI Collaboration & Workflow Integration', days: '70-72' },
+    { id: 't24', name: 'AI Monitoring, Drift & Maintenance', days: '73-75' },
+    { id: 't25', name: 'Real-world Evidence & Post-market Surveillance', days: '76-78' },
+  ]},
+  { phase: 6, title: 'Capstone & Portfolio', topics: [
+    { id: 't26', name: 'Literature Review: State of Clinical AI 2024-2025', days: '79-81' },
+    { id: 't27', name: 'Case Study Analysis: Success & Failures', days: '82-84' },
+    { id: 't28', name: 'Build a Mini Clinical AI Project', days: '85-87' },
+    { id: 't29', name: 'Certification Prep & Knowledge Synthesis', days: '88-89' },
+    { id: 't30', name: 'Reflection, Portfolio & Next Steps', days: '90' },
+  ]},
+];
+
+// ── DAILY PLAN (90 days) ───────────────────────────────────────────────────
+const DAILY_PLAN = {
+  1:  { f: 'What clinical AI is and where it sits in healthcare; types — predictive, diagnostic, generative.', m: 'Topol, Deep Medicine (ch. 1–2)' },
+  2:  { f: 'History of medical AI: expert systems (MYCIN), the AI winters, the deep learning era, today\'s LLMs.', m: 'NEJM 2019 "Machine learning in medicine" (Rajkomar/Dean/Kohane)' },
+  3:  { f: 'The clinical AI lifecycle: problem → data → model → validation → deployment → monitoring.', m: 'WHO "Ethics & governance of AI for health" (intro)' },
+  4:  { f: 'EHR data: structured (labs, vitals, meds, ICD/CPT) vs unstructured (clinical notes).', m: 'MIMIC-IV documentation (MIT-LCP)' },
+  5:  { f: 'Medical imaging (DICOM) and waveform/signal data (ECG, EEG).', m: '"DICOM basics" primer; MIMIC-IV-ECG overview' },
+  6:  { f: 'Genomics & -omics data; claims data; wearables / remote patient monitoring.', m: 'Fundamentals of Clinical Data Science (open-access, Springer)' },
+  7:  { f: 'HL7 v2 vs FHIR; why interoperability matters in practice.', m: 'HL7 FHIR official docs (hl7.org/fhir)' },
+  8:  { f: 'FHIR resources (Patient, Observation, Condition, Encounter); REST API basics.', m: 'SMART on FHIR tutorials; HAPI FHIR sandbox' },
+  9:  { f: 'Clinical terminologies: ICD-10, SNOMED CT, LOINC, RxNorm.', m: 'SNOMED CT starter guide; LOINC overview' },
+  10: { f: 'NLP basics: tokenization, stopwords, stemming; clinical text quirks (abbreviations, negation).', m: 'Stanford CS224N early lectures' },
+  11: { f: 'Named entity recognition, negation detection (NegEx), de-identification.', m: 'medspaCy GitHub tutorials' },
+  12: { f: 'Clinical NLP tooling: spaCy/medspaCy, cTAKES, scispaCy.', m: 'scispaCy docs; i2b2 NLP challenge overviews' },
+  13: { f: 'How images become tensors; convolution intuition.', m: 'fast.ai Practical Deep Learning (lesson 1)' },
+  14: { f: 'CNN architectures (ResNet, U-Net); classification vs segmentation vs detection.', m: 'fast.ai (lessons 2–3)' },
+  15: { f: 'Imaging modalities & tasks (CXR, CT, MRI, pathology slides).', m: 'CheXpert dataset paper; Nature Medicine imaging review' },
+  16: { f: 'Supervised vs unsupervised learning; train/val/test splits; overfitting.', m: 'Andrew Ng ML Specialization (Coursera)' },
+  17: { f: 'Clinical metrics: sensitivity, specificity, PPV/NPV, AUC-ROC, AUC-PR.', m: 'Google ML Crash Course (classification)' },
+  18: { f: 'Class imbalance (rare disease), calibration, decision thresholds.', m: '"A clinician\'s guide to AI" (calibration sections)' },
+  19: { f: 'Data leakage, missingness, temporal validation.', m: 'scikit-learn user guide (model evaluation)' },
+  20: { f: 'Logistic regression and decision trees as clinical baselines.', m: 'scikit-learn linear & tree docs' },
+  21: { f: 'Random forests and gradient boosting (XGBoost) for tabular EHR.', m: 'XGBoost docs' },
+  22: { f: 'Build a risk model end-to-end on a sample dataset.', m: 'MIMIC mortality-prediction tutorial' },
+  23: { f: 'k-means, hierarchical clustering; PCA for dimensionality reduction.', m: 'scikit-learn clustering docs' },
+  24: { f: 't-SNE / UMAP for patient phenotyping.', m: 'UMAP docs; computational phenotyping paper' },
+  25: { f: 'Anomaly detection for outlier patients/events.', m: 'scikit-learn outlier detection guide' },
+  26: { f: 'Neural net fundamentals: layers, activation, backprop, loss.', m: '3Blue1Brown neural-net series' },
+  27: { f: 'Training mechanics: optimizers, regularization, dropout.', m: 'DeepLearning.AI Specialization (course 2)' },
+  28: { f: 'CNNs for imaging recap; RNNs/LSTMs for sequential vitals.', m: 'DeepLearning.AI (sequence models)' },
+  29: { f: 'Transfer learning & data augmentation in low-data clinical settings.', m: 'fast.ai transfer learning lesson' },
+  30: { f: 'The attention mechanism & transformer architecture.', m: '"Attention Is All You Need" + The Illustrated Transformer' },
+  31: { f: 'BERT → ClinicalBERT / BioBERT; embeddings for clinical text.', m: 'ClinicalBERT paper' },
+  32: { f: 'GPT-style models; prompting; RAG over clinical knowledge.', m: 'Med-PaLM paper; RAG primer' },
+  33: { f: 'LLM risks: hallucination, prompt injection, evaluation.', m: 'GPT-4 USMLE paper; LLM eval surveys' },
+  34: { f: 'Sources of bias: sampling, label, measurement, deployment.', m: 'WHO AI ethics report (bias section)' },
+  35: { f: 'Case study — Obermeyer et al. 2019 (cost-as-proxy racial bias).', m: 'Obermeyer 2019 (Science)' },
+  36: { f: 'Subgroup performance analysis & model auditing.', m: 'Fairlearn toolkit docs' },
+  37: { f: 'Fairness definitions (demographic parity, equalized odds) and trade-offs.', m: 'Fairlearn fairness metrics guide' },
+  38: { f: 'Model cards and datasheets for datasets.', m: '"Model Cards" (Mitchell); "Datasheets for Datasets" (Gebru)' },
+  39: { f: 'Accountability frameworks & AI governance.', m: 'WHO AI governance chapter' },
+  40: { f: 'HIPAA: PHI, Safe Harbor (18 identifiers), Expert Determination.', m: 'HHS HIPAA summary' },
+  41: { f: 'GDPR & international health-data rules; consent.', m: 'GDPR Art. 9 (health data)' },
+  42: { f: 'De-identification in practice.', m: 'NIST/HHS de-identification guidance' },
+  43: { f: 'Software as a Medical Device (SaMD); 510(k) vs De Novo vs PMA.', m: 'FDA AI/ML SaMD Action Plan' },
+  44: { f: 'Predetermined Change Control Plans; locked vs adaptive algorithms.', m: 'FDA PCCP guidance' },
+  45: { f: 'Review the FDA list of cleared AI/ML devices.', m: 'FDA database of cleared AI/ML devices' },
+  46: { f: 'Why explainability matters clinically; global vs local explanations.', m: 'Interpretable ML (Molnar, ch. 1–2)' },
+  47: { f: 'SHAP and LIME for tabular models.', m: 'SHAP docs + "A Unified Approach to Interpreting Predictions"' },
+  48: { f: 'Saliency maps / Grad-CAM for imaging models.', m: 'Grad-CAM paper' },
+  49: { f: 'AI in radiology: CXR triage and reporting.', m: 'CheXNet paper' },
+  50: { f: 'CT applications: stroke, PE, intracranial hemorrhage detection.', m: 'Aidoc / Viz.ai case studies' },
+  51: { f: 'MRI applications and radiology workflow integration.', m: 'Nature Medicine radiology AI review' },
+  52: { f: 'Digital pathology: whole-slide imaging.', m: 'CAMELYON16/17 challenge papers' },
+  53: { f: 'Genomics: variant calling and polygenic risk scores.', m: 'DeepVariant overview' },
+  54: { f: 'Protein structure & drug targets.', m: 'AlphaFold2 (Nature 2021)' },
+  55: { f: 'Clinical Decision Support Systems: design & the "5 rights" of CDS.', m: 'AHRQ CDS resources' },
+  56: { f: 'Alert design and alert fatigue.', m: 'Review on alert fatigue (JAMIA)' },
+  57: { f: 'Integrating CDS into the EHR workflow.', m: 'SMART on FHIR CDS Hooks' },
+  58: { f: 'Early warning scores (NEWS2) and clinical deterioration.', m: 'NEWS2 (RCP) documentation' },
+  59: { f: 'Sepsis prediction: the Epic Sepsis Model controversy.', m: 'Epic Sepsis Model external validation (JAMA IM 2021)' },
+  60: { f: 'ICU AI models; TREWS and continuous monitoring.', m: 'MIMIC sepsis cohort; TREWS paper' },
+  61: { f: 'AI in drug discovery: target ID and molecule generation.', m: 'Reviews on ML for drug discovery' },
+  62: { f: 'Pharmacogenomics and precision oncology.', m: 'Precision medicine review (Nature)' },
+  63: { f: 'Putting it together: AI across the drug & treatment pipeline.', m: 'Case studies; recap notes' },
+  64: { f: 'MLOps basics: model serving, latency, versioning.', m: 'MLOps primer; "Hidden Technical Debt in ML" (Sculley)' },
+  65: { f: 'EHR integration; silent vs live deployment.', m: 'Deployment case studies' },
+  66: { f: 'Reproducibility, packaging, and rollback strategy.', m: 'MLflow / model registry docs' },
+  67: { f: 'Prospective vs retrospective studies; external validation.', m: 'TRIPOD-AI guideline' },
+  68: { f: 'Reporting standards for clinical AI.', m: 'CONSORT-AI, SPIRIT-AI, DECIDE-AI' },
+  69: { f: 'Risk of bias assessment in prediction models.', m: 'PROBAST tool' },
+  70: { f: 'Human-AI collaboration; automation bias.', m: 'Papers on automation bias' },
+  71: { f: 'Clinician trust and workflow fit.', m: 'Hannah Fry, Hello World (accessible)' },
+  72: { f: 'Human-in-the-loop design patterns.', m: 'HCI for clinical AI readings' },
+  73: { f: 'Data drift and concept drift.', m: '"Dataset Shift in Machine Learning"' },
+  74: { f: 'Performance decay and retraining strategies.', m: 'Monitoring case studies' },
+  75: { f: 'Production monitoring & alerting for clinical models.', m: 'ML monitoring tool docs (e.g. Evidently)' },
+  76: { f: 'Real-world evidence (RWE) and its uses.', m: 'FDA RWE framework' },
+  77: { f: 'Post-market surveillance & incident reporting.', m: 'Post-market AI surveillance literature' },
+  78: { f: 'Auditing deployed models over time.', m: 'Algorithmic auditing frameworks' },
+  79: { f: 'Literature review: survey 2023–2025 clinical AI; start a bibliography.', m: 'PubMed, arXiv (cs.LG/q-bio), NEJM AI' },
+  80: { f: 'Deep dive into 2–3 landmark recent papers.', m: 'Nature Medicine; your saved reading list' },
+  81: { f: 'Synthesize themes & open problems into notes.', m: 'Your Thinking Tools notes' },
+  82: { f: 'Case study: a clinical AI success — what worked and why.', m: 'Published deployment reports' },
+  83: { f: 'Case study: a failure (e.g. IBM Watson Oncology) — root causes.', m: 'Post-mortem articles' },
+  84: { f: 'Extract transferable lessons from both.', m: 'Write-up in your reflection tool' },
+  85: { f: 'Mini project: pick a task (e.g. readmission/mortality), set up data.', m: 'MIMIC-IV demo (no credentialing); Kaggle health datasets' },
+  86: { f: 'Train and validate your model; check subgroup performance.', m: 'scikit-learn / XGBoost; Fairlearn' },
+  87: { f: 'Document your project (a model card + README).', m: 'Model card template' },
+  88: { f: 'Certification prep: consolidate notes, review weak quiz areas.', m: 'Your quiz results + notes in this app' },
+  89: { f: 'Mock self-test and final knowledge synthesis.', m: 'Re-take quizzes; Feynman the hard topics' },
+  90: { f: 'Reflection, portfolio finalization & next-steps plan.', m: 'Your learning narrative; post-90-day roadmap' },
+};
+
+function dayRangeToNums(days) {
+  // "7-9" -> [7,8,9]; "90" -> [90]
+  if (days.includes('-')) { const [a,b] = days.split('-').map(Number); return Array.from({length:b-a+1},(_,i)=>a+i); }
+  return [Number(days)];
+}
+function topicForDay(day) {
+  for (const phase of CURRICULUM) {
+    for (const t of phase.topics) {
+      if (dayRangeToNums(t.days).includes(day)) return { ...t, phase: phase.phase, phaseTitle: phase.title };
+    }
+  }
+  return null;
+}
+
+// ── QUIZ DATA ──────────────────────────────────────────────────────────────
+const QUIZZES = [
+  { id: 'q1', title: 'EHR & Data Standards', section: 'Phase 1', questions: [
+    { q: 'What does FHIR stand for?', opts: ['Fast Healthcare Interoperability Resources','Federal Health Information Record','Flexible Healthcare Integration Repository','Functional Health Interchange Rules'], a: 0, exp: 'FHIR (Fast Healthcare Interoperability Resources) is a standard for healthcare data exchange developed by HL7.' },
+    { q: 'Which data type is NOT typically found in an Electronic Health Record?', opts: ['Laboratory results','Medication orders','Social media posts','Imaging reports'], a: 2, exp: 'EHRs contain clinical data like labs, meds, notes, and imaging. Social media data is not a standard EHR component.' },
+    { q: 'ICD-10 codes are used for:', opts: ['Drug prescriptions','Disease classification & billing','Medical device regulation','Lab reference ranges'], a: 1, exp: 'ICD-10 (International Classification of Diseases, 10th revision) is used for disease classification, clinical documentation, and medical billing.' },
+    { q: 'SNOMED CT is primarily used for:', opts: ['Drug dosing calculations','Clinical terminology standardization','Imaging compression','Network security'], a: 1, exp: 'SNOMED CT (Systematized Nomenclature of Medicine – Clinical Terms) is a comprehensive clinical health terminology used for standardizing clinical concepts.' },
+    { q: 'Which organization develops and maintains FHIR standards?', opts: ['WHO','FDA','HL7 International','CDC'], a: 2, exp: 'HL7 International (Health Level Seven) develops and maintains the FHIR standard for healthcare data exchange.' },
+  ]},
+  { id: 'q2', title: 'ML Fundamentals in Healthcare', section: 'Phase 2', questions: [
+    { q: 'In a clinical prediction model, what does AUC-ROC measure?', opts: ['Prediction speed','Model accuracy at a fixed threshold','Discriminative ability across all thresholds','Training data size'], a: 2, exp: 'AUC-ROC (Area Under the Receiver Operating Characteristic curve) measures a model\'s ability to discriminate between positive and negative cases across all classification thresholds.' },
+    { q: 'What is a key challenge of using clinical data for ML?', opts: ['Too much standardization','Class imbalance (rare diseases)','Excess labeled data','Uniform data formats'], a: 1, exp: 'Clinical datasets often have severe class imbalance — diseases, especially rare ones, have far fewer positive cases than negative ones, making model training difficult.' },
+    { q: 'What is "label leakage" in clinical ML?', opts: ['Patient data being shared without consent','Future information used in training features','Model deployed without validation','Missing labels in the dataset'], a: 1, exp: 'Label leakage occurs when features used in training contain information that wouldn\'t be available at prediction time, leading to overly optimistic performance estimates.' },
+    { q: 'Which technique is commonly used to handle missing clinical data?', opts: ['Deleting all incomplete records','Multiple imputation','Rounding to nearest value','Using maximum values'], a: 1, exp: 'Multiple imputation is a statistically valid method to handle missing data by creating several complete datasets with plausible values and pooling results.' },
+    { q: 'Cross-validation in clinical ML is primarily used to:', opts: ['Speed up training','Estimate how well a model generalizes to new patients','Reduce data collection costs','Encrypt patient data'], a: 1, exp: 'Cross-validation estimates model generalization performance on unseen data, crucial in clinical settings where you need reliable performance estimates before deployment.' },
+  ]},
+  { id: 'q3', title: 'AI Ethics & Bias in Healthcare', section: 'Phase 3', questions: [
+    { q: 'Which historical study revealed racial bias in a widely-used healthcare algorithm?', opts: ['Framingham Heart Study','Obermeyer et al. 2019 (risk score study)','SPRINT Trial','NHANES Survey'], a: 1, exp: 'Obermeyer et al. (2019) found a widely-used commercial algorithm systematically assigned lower risk scores to Black patients than equally sick white patients, because it used healthcare costs as a proxy for health needs.' },
+    { q: 'The "Matthew Effect" in AI refers to:', opts: ['Model overfitting','Well-represented groups getting better predictions','Data preprocessing steps','Gradient descent optimization'], a: 1, exp: 'The Matthew Effect in AI describes how groups already well-represented in training data receive better model performance, while underrepresented groups get worse predictions — amplifying existing inequities.' },
+    { q: 'What does "model interpretability" mean in clinical AI?', opts: ['How fast the model runs','The ability to understand why a model made a prediction','Model accuracy on test data','Data encryption method'], a: 1, exp: 'Interpretability means clinicians can understand and explain why an AI model made a specific prediction — essential for clinical trust, debugging, and regulatory compliance.' },
+    { q: 'Under HIPAA, de-identified data is defined by:', opts: ['Removing only the patient name','Removing 18 specific identifiers (Safe Harbor) or statistical certification','Encrypting the database','Using only aggregate statistics'], a: 1, exp: 'HIPAA Safe Harbor de-identification requires removal of 18 specific identifiers (name, DOB, ZIP, etc.). The Expert Determination method is an alternative using statistical methods.' },
+    { q: 'Which regulatory pathway applies to most FDA-regulated AI/ML clinical software?', opts: ['510(k) premarket notification','PMA (Premarket Approval)','De Novo classification','OTC monograph'], a: 0, exp: 'Most AI/ML-based Software as a Medical Device (SaMD) follows the 510(k) pathway, demonstrating substantial equivalence to a legally marketed predicate device.' },
+  ]},
+  { id: 'q4', title: 'Clinical Applications of AI', section: 'Phase 4', questions: [
+    { q: 'AI has shown FDA-cleared performance in detecting which condition on chest X-rays?', opts: ['Appendicitis','Pneumothorax','Kidney stones','Brain tumors'], a: 1, exp: 'Several FDA-cleared AI tools detect pneumothorax (collapsed lung) on chest X-rays, alerting radiologists to urgent findings. Examples include tools by Aidoc and Viz.ai.' },
+    { q: 'What is a "clinical decision support system" (CDSS)?', opts: ['A hospital billing system','Software that provides patient-specific recommendations to clinicians','A drug dispensing robot','An electronic scheduling system'], a: 1, exp: 'A CDSS provides clinicians with patient-specific assessment or recommendations at the point of care, integrating patient data with clinical knowledge bases.' },
+    { q: 'Early Warning Scores (EWS) like NEWS2 predict:', opts: ['Patient satisfaction','Clinical deterioration / sepsis risk','Length of hospital stay billing','Insurance eligibility'], a: 1, exp: 'Early Warning Scores like NEWS2 track vital signs to predict clinical deterioration, often triggering escalation protocols. AI models have extended these to multi-parameter EHR inputs.' },
+    { q: 'Transfer learning in medical imaging typically means:', opts: ['Moving patient data between hospitals','Using a model pre-trained on natural images for medical image tasks','Converting MRI to CT images','Sharing model weights illegally'], a: 1, exp: 'Transfer learning applies models pre-trained on large datasets (e.g., ImageNet) to medical imaging, requiring far less labeled medical data for good performance.' },
+    { q: 'AlphaFold 2 is significant in clinical AI because it:', opts: ['Predicts drug side effects','Predicts 3D protein structures from amino acid sequences','Detects cancer in blood tests','Automates clinical note writing'], a: 1, exp: 'AlphaFold 2 (DeepMind) revolutionized structural biology by accurately predicting 3D protein structures, accelerating drug discovery and our understanding of disease mechanisms.' },
+  ]},
+  { id: 'q5', title: 'NLP & Language Models in Medicine', section: 'Phase 2', questions: [
+    { q: 'What is "named entity recognition" (NER) in clinical NLP?', opts: ['Renaming database fields','Identifying clinical entities (diseases, drugs, symptoms) in text','Training language models','Encrypting patient names'], a: 1, exp: 'NER identifies and classifies named entities in text — in clinical NLP this means finding mentions of diseases, medications, symptoms, procedures, and anatomy in clinical notes.' },
+    { q: 'GPT-4 scored above which percentile on the USMLE Step 1 exam?', opts: ['20th','50th','75th','90th'], a: 3, exp: 'GPT-4 scored around the 90th percentile on the USMLE Step 1, demonstrating strong medical knowledge. This sparked major discussion about LLMs in clinical practice.' },
+    { q: 'What is "hallucination" in the context of LLMs in healthcare?', opts: ['Vision problems in patients','Model generating plausible-sounding but factually incorrect information','Model refusing to answer','Slow model inference'], a: 1, exp: 'LLM hallucination — generating confident but incorrect information — is a critical safety concern in healthcare, where inaccurate medical information could harm patients.' },
+    { q: 'BERT was significant for clinical NLP because:', opts: ['It was the first AI to pass medical boards','Bidirectional training improved contextual word understanding in medical text','It was faster than previous models','It required no training data'], a: 1, exp: 'BERT\'s bidirectional transformer architecture allowed it to understand context from both directions in text, significantly improving NLP tasks including clinical note understanding.' },
+    { q: 'i2b2 datasets are commonly used for:', opts: ['Medical device testing','Clinical NLP benchmarks','Hospital financial auditing','Radiology image labeling'], a: 1, exp: 'i2b2 (Informatics for Integrating Biology and the Bedside) released de-identified clinical NLP datasets used as standard benchmarks for tasks like de-identification, medication extraction, and relation detection.' },
+  ]},
+];
+
+// ── STATE ─────────────────────────────────────────────────────────────────
+let state = {
+  startDate: DB.get('startDate', null),
+  logs: DB.get('logs', []),
+  completedTopics: DB.get('completedTopics', []),
+  thinkingNotes: DB.get('thinkingNotes', []),
+  reminder: DB.get('reminder', { enabled: false, time: '09:00', msg: 'Time to study Clinical AI! 🧠' }),
+  goals: DB.get('goals', { hours: 2 }),
+  quizScores: DB.get('quizScores', {}),
+};
+let currentQuiz = null, currentQIdx = 0, quizAnswered = false, quizScore = 0;
+let selectedConfidence = null;
+let reminderInterval = null;
+const concepts = [];
+
+// ── UTILS ─────────────────────────────────────────────────────────────────
+function saveState() {
+  DB.set('logs', state.logs);
+  DB.set('completedTopics', state.completedTopics);
+  DB.set('thinkingNotes', state.thinkingNotes);
+  DB.set('reminder', state.reminder);
+  DB.set('goals', state.goals);
+  DB.set('quizScores', state.quizScores);
+}
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2800);
+}
+function today() { return new Date().toISOString().split('T')[0]; }
+function daysBetween(a, b) { return Math.round((new Date(b) - new Date(a)) / 86400000); }
+function formatDate(d) { return new Date(d + 'T12:00:00').toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' }); }
+
+// ── NAVIGATION ─────────────────────────────────────────────────────────────
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  const tabs = ['dashboard','topics','calendar','log','quiz','thinking','reminders'];
+  document.querySelectorAll('.nav-tab')[tabs.indexOf(id)]?.classList.add('active');
+  if (id === 'dashboard') renderDashboard();
+  if (id === 'topics') renderTopics();
+  if (id === 'calendar') renderCalendar();
+  if (id === 'log') renderLog();
+  if (id === 'quiz') renderQuizHome();
+  if (id === 'thinking') renderThinkingNotes();
+  if (id === 'reminders') renderReminders();
+}
+
+// ── DASHBOARD ─────────────────────────────────────────────────────────────
+function getStartDate() {
+  if (!state.startDate) {
+    state.startDate = today();
+    DB.set('startDate', state.startDate);
+  }
+  return state.startDate;
+}
+function computeStats() {
+  const start = getStartDate();
+  const currentDay = Math.min(90, Math.max(1, daysBetween(start, today()) + 1));
+  const studiedDays = new Set(state.logs.map(l => l.date));
+  const totalHours = state.logs.reduce((s, l) => s + (parseFloat(l.hours) || 0), 0);
+
+  // streak
+  let streak = 0, d = new Date();
+  d.setHours(0,0,0,0);
+  while (true) {
+    const ds = d.toISOString().split('T')[0];
+    if (studiedDays.has(ds)) { streak++; d.setDate(d.getDate() - 1); }
+    else if (ds === today() && !studiedDays.has(ds)) { d.setDate(d.getDate() - 1); } // allow today
+    else break;
+    if (streak > 90) break;
+  }
+
+  return { currentDay, studiedDays, totalHours, streak, topicsDone: state.completedTopics.length };
+}
+function renderDashboard() {
+  const { currentDay, studiedDays, totalHours, streak, topicsDone } = computeStats();
+  const start = getStartDate();
+  document.getElementById('stat-day').textContent = currentDay;
+  document.getElementById('stat-studied').textContent = studiedDays.size;
+  document.getElementById('stat-streak').textContent = streak;
+  document.getElementById('stat-topics').textContent = topicsDone;
+  document.getElementById('stat-hours').textContent = totalHours.toFixed(1) + 'h';
+  const pct = Math.round(currentDay / 90 * 100);
+  document.getElementById('progress-pct').textContent = pct + '%';
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('nav-streak').textContent = '🔥 ' + streak + (streak === 1 ? ' day' : ' days');
+  document.getElementById('nav-day').textContent = 'Day ' + currentDay + ' / 90';
+
+  // today's study plan
+  const plan = DAILY_PLAN[currentDay];
+  const planTopic = topicForDay(currentDay);
+  document.getElementById('today-plan-day').textContent = 'Day ' + currentDay;
+  if (plan) {
+    document.getElementById('today-plan-body').innerHTML = `
+      <div style="font-size:.78rem;color:var(--accent);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;">
+        Phase ${planTopic.phase} · ${planTopic.name}
+      </div>
+      <div style="font-size:1.02rem;font-weight:600;line-height:1.5;margin-bottom:10px;">${plan.f}</div>
+      <div style="font-size:.85rem;color:var(--text2);"><strong style="color:var(--accent2);">📚 Materials:</strong> ${plan.m}</div>
+    `;
+  } else {
+    document.getElementById('today-plan-body').innerHTML = '<div class="text-muted">Your 90-day plan is complete! 🎉</div>';
+  }
+
+  // today focus
+  const todayLog = state.logs.find(l => l.date === today());
+  document.getElementById('today-focus').innerHTML = todayLog
+    ? `<strong>${todayLog.topic}</strong><br><span style="color:var(--text2);font-size:.82rem;">${todayLog.learned?.substring(0,120) || '—'}...</span>`
+    : `<span style="color:var(--text2);">No session logged yet today.</span>`;
+
+  // next topic
+  const allTopics = CURRICULUM.flatMap(p => p.topics);
+  const next = allTopics.find(t => !state.completedTopics.includes(t.id));
+  document.getElementById('next-topic').innerHTML = next
+    ? `<strong>${next.name}</strong><br><span style="color:var(--text2);font-size:.82rem;">Days ${next.days}</span>`
+    : `<span style="color:var(--accent2);">All topics completed! 🎉</span>`;
+
+  // calendar
+  const grid = document.getElementById('cal-grid');
+  grid.innerHTML = '';
+  for (let i = 0; i < 90; i++) {
+    const d = new Date(start + 'T12:00:00');
+    d.setDate(d.getDate() + i);
+    const ds = d.toISOString().split('T')[0];
+    const el = document.createElement('div');
+    el.className = 'cal-day';
+    const isPast = ds < today();
+    const isToday = ds === today();
+    const isFuture = ds > today();
+    if (isToday) el.classList.add('today');
+    else if (isFuture) el.classList.add('future');
+    else if (studiedDays.has(ds)) el.classList.add('studied');
+    else if (isPast) el.classList.add('missed');
+    el.title = `Day ${i+1} — ${formatDate(ds)}${studiedDays.has(ds) ? ' ✓' : ''}`;
+    grid.appendChild(el);
+  }
+
+  // phase progress
+  const pp = document.getElementById('phase-progress');
+  pp.innerHTML = CURRICULUM.map(phase => {
+    const done = phase.topics.filter(t => state.completedTopics.includes(t.id)).length;
+    const pct = Math.round(done / phase.topics.length * 100);
+    return `<div style="margin-bottom:14px;">
+      <div class="lbl" style="display:flex;justify-content:space-between;font-size:.8rem;color:var(--text2);margin-bottom:5px;">
+        <span>Phase ${phase.phase}: ${phase.title}</span><span>${done}/${phase.topics.length}</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" style="width:${pct}%;background:${['#c2784f','#6b8e5a','#d9a441','#c0563f','#a98b6a','#9c7b9a'][phase.phase-1]}"></div></div>
+    </div>`;
+  }).join('');
+}
+
+// ── TOPICS ─────────────────────────────────────────────────────────────────
+function renderTopics() {
+  const allTopics = CURRICULUM.flatMap(p => p.topics);
+  document.getElementById('topic-done-count').textContent = state.completedTopics.length;
+  document.getElementById('topic-total-count').textContent = allTopics.length;
+  const list = document.getElementById('topics-list');
+  list.innerHTML = CURRICULUM.map(phase => `
+    <div class="phase-label">Phase ${phase.phase} — ${phase.title}</div>
+    ${phase.topics.map(t => {
+      const done = state.completedTopics.includes(t.id);
+      const dayNums = dayRangeToNums(t.days);
+      const dayDetails = dayNums.map(d => DAILY_PLAN[d] ? `
+        <div style="display:flex;gap:12px;padding:10px 0;border-top:1px solid var(--border);">
+          <div style="flex-shrink:0;width:54px;font-size:.78rem;font-weight:700;color:var(--accent);">Day ${d}</div>
+          <div>
+            <div style="font-size:.88rem;line-height:1.5;">${DAILY_PLAN[d].f}</div>
+            <div style="font-size:.78rem;color:var(--text2);margin-top:4px;">📚 ${DAILY_PLAN[d].m}</div>
+          </div>
+        </div>` : '').join('');
+      return `<div class="topic-item${done?' done':''}" id="ti-${t.id}" onclick="toggleTopicDetail('${t.id}',event)" style="display:block;cursor:pointer;">
+        <div style="display:flex;align-items:center;gap:12px;">
+          <div class="topic-check">${done?'✓':''}</div>
+          <div class="topic-name">${t.name} <span style="font-size:.72rem;color:var(--text2);font-weight:400;" id="caret-${t.id}">▸</span></div>
+          <div class="topic-meta">Days ${t.days}</div>
+          <div class="topic-actions">
+            <button class="btn btn-sm ${done?'btn-outline':'btn-primary'}" onclick="toggleTopic('${t.id}',event)">
+              ${done?'Undo':'Mark Done'}
+            </button>
+            <button class="btn btn-sm btn-outline" onclick="quizForTopic('${t.id}',event)">Quiz</button>
+          </div>
+        </div>
+        <div id="detail-${t.id}" style="display:none;margin-top:6px;padding-left:34px;">${dayDetails}</div>
+      </div>`;
+    }).join('')}
+  `).join('');
+}
+function toggleTopicDetail(id, e) {
+  const detail = document.getElementById('detail-' + id);
+  const caret = document.getElementById('caret-' + id);
+  const open = detail.style.display === 'none';
+  detail.style.display = open ? 'block' : 'none';
+  caret.textContent = open ? '▾' : '▸';
+}
+function toggleTopic(id, e) {
+  e.stopPropagation();
+  const i = state.completedTopics.indexOf(id);
+  if (i >= 0) state.completedTopics.splice(i, 1);
+  else { state.completedTopics.push(id); toast('Topic marked complete! ✓'); }
+  saveState();
+  renderTopics();
+}
+function quizForTopic(id, e) {
+  e.stopPropagation();
+  showPage('quiz');
+  setTimeout(() => startRandomQuiz(), 100);
+}
+
+// ── CALENDAR ───────────────────────────────────────────────────────────────
+function dateForDay(day) {
+  const start = getStartDate();
+  const d = new Date(start + 'T12:00:00');
+  d.setDate(d.getDate() + (day - 1));
+  return d.toISOString().split('T')[0];
+}
+function renderCalendar() {
+  const { studiedDays } = computeStats();
+  const container = document.getElementById('calendar-phases');
+  container.innerHTML = CURRICULUM.map(phase => {
+    const dayNums = phase.topics.flatMap(t => dayRangeToNums(t.days)).sort((a,b)=>a-b);
+    const cards = dayNums.map(day => {
+      const ds = dateForDay(day);
+      const plan = DAILY_PLAN[day];
+      const studied = studiedDays.has(ds);
+      const isToday = ds === today();
+      const isFuture = ds > today();
+      const isMissed = ds < today() && !studied;
+      let cls = 'cal-card';
+      if (studied) cls += ' studied';
+      if (isToday) cls += ' today';
+      else if (isFuture) cls += ' future';
+      else if (isMissed) cls += ' missed';
+      return `<div class="${cls}" onclick="openDayModal(${day})">
+        <div class="day-num">Day ${day} · ${formatDateShort(ds)}</div>
+        <div class="day-focus">${plan ? plan.f : ''}</div>
+      </div>`;
+    }).join('');
+    return `<div class="cal-phase-title">Phase ${phase.phase} — ${phase.title}</div>
+      <div class="cal-month-grid">${cards}</div>`;
+  }).join('');
+}
+function formatDateShort(d) { return new Date(d + 'T12:00:00').toLocaleDateString('en-US', { month:'short', day:'numeric' }); }
+function openDayModal(day) {
+  const plan = DAILY_PLAN[day];
+  const t = topicForDay(day);
+  const ds = dateForDay(day);
+  const { studiedDays } = computeStats();
+  const studied = studiedDays.has(ds);
+  const log = state.logs.find(l => l.date === ds);
+  document.getElementById('modal-day-title').textContent = `Day ${day} · ${formatDate(ds)}`;
+  document.getElementById('modal-day-body').innerHTML = `
+    <div class="chip purple" style="margin-bottom:12px;">Phase ${t.phase} · ${t.name}</div>
+    <div style="font-size:.78rem;color:var(--text2);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;">Focus</div>
+    <div style="font-size:1rem;line-height:1.6;margin-bottom:16px;">${plan.f}</div>
+    <div style="font-size:.78rem;color:var(--text2);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;">Materials</div>
+    <div style="font-size:.92rem;line-height:1.6;color:var(--accent2);margin-bottom:20px;">📚 ${plan.m}</div>
+    <div style="padding:14px;background:var(--surface2);border-radius:8px;font-size:.85rem;">
+      ${studied
+        ? `<strong style="color:var(--accent2);">✓ Studied this day.</strong>${log ? '<br><span style="color:var(--text2);">Logged: ' + log.topic + (log.hours ? ' · ' + log.hours + 'h' : '') + '</span>' : ''}`
+        : `<span style="color:var(--text2);">Not logged yet.</span>`}
+    </div>
+    <button class="btn btn-primary btn-sm" style="margin-top:16px;" onclick="logFromCalendar('${ds}', '${(plan.f).replace(/'/g,"\\'").substring(0,60)}')">Log a Session for This Day</button>
+  `;
+  document.getElementById('day-modal').classList.add('show');
+}
+function closeDayModal() {
+  document.getElementById('day-modal').classList.remove('show');
+}
+function logFromCalendar(ds, focus) {
+  closeDayModal();
+  showPage('log');
+  setTimeout(() => {
+    document.getElementById('log-date').value = ds;
+    document.getElementById('log-topic').value = focus;
+    document.getElementById('log-topic').focus();
+  }, 100);
+}
+
+// ── STUDY LOG ─────────────────────────────────────────────────────────────
+function renderLog() {
+  const dateInput = document.getElementById('log-date');
+  if (!dateInput.value) dateInput.value = today();
+  const entries = document.getElementById('log-entries');
+  const sorted = [...state.logs].sort((a,b) => b.date.localeCompare(a.date));
+  document.getElementById('log-total-days').textContent = sorted.length + ' sessions';
+  if (!sorted.length) {
+    entries.innerHTML = '<div class="empty-state"><div class="icon">📓</div><div>No sessions logged yet. Start studying and log your first session!</div></div>';
+    return;
+  }
+  entries.innerHTML = sorted.map((l, i) => `
+    <div class="log-entry">
+      <div class="log-entry-header">
+        <div>
+          <div class="log-entry-title">${l.topic}</div>
+          <div class="log-entry-date">${formatDate(l.date)}</div>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center;">
+          ${l.hours?`<span class="hours-badge">${l.hours}h</span>`:''}
+          ${l.mood?`<span class="chip">${l.mood}</span>`:''}
+          <button class="btn btn-sm btn-danger" onclick="deleteLog(${i})">×</button>
+        </div>
+      </div>
+      ${l.learned?`<div class="log-entry-body">${l.learned}</div>`:''}
+      ${l.questions?`<div class="log-entry-body" style="margin-top:8px;color:var(--accent3);font-size:.82rem;">❓ ${l.questions}</div>`:''}
+      ${l.resources?`<span class="log-tag">📚 ${l.resources}</span>`:''}
+    </div>
+  `).join('');
+}
+function saveLog() {
+  const topic = document.getElementById('log-topic').value.trim();
+  const date = document.getElementById('log-date').value;
+  if (!topic || !date) { toast('Please enter a topic and date!'); return; }
+  const entry = {
+    topic,
+    date,
+    hours: document.getElementById('log-hours').value,
+    mood: document.getElementById('log-mood').value,
+    learned: document.getElementById('log-learned').value.trim(),
+    questions: document.getElementById('log-questions').value.trim(),
+    resources: document.getElementById('log-resources').value.trim(),
+    id: Date.now(),
+  };
+  state.logs.unshift(entry);
+  saveState();
+  // clear
+  ['log-topic','log-hours','log-mood','log-learned','log-questions','log-resources'].forEach(id => {
+    const el = document.getElementById(id);
+    el.value = '';
+  });
+  document.getElementById('log-date').value = today();
+  toast('Session logged! Keep it up 🚀');
+  renderLog();
+}
+function deleteLog(realIdx) {
+  const sorted = [...state.logs].sort((a,b) => b.date.localeCompare(a.date));
+  const entry = sorted[realIdx];
+  state.logs = state.logs.filter(l => l.id !== entry.id);
+  saveState();
+  renderLog();
+}
+
+// ── QUIZ ──────────────────────────────────────────────────────────────────
+function renderQuizHome() {
+  document.getElementById('quiz-home').style.display = '';
+  document.getElementById('quiz-active').style.display = 'none';
+  const sel = document.getElementById('quiz-selector');
+  sel.innerHTML = QUIZZES.map(q => {
+    const best = state.quizScores[q.id];
+    return `<div class="quiz-card" onclick="startQuiz('${q.id}')">
+      <div class="chip purple">${q.section}</div>
+      <h4 style="margin-top:8px;">${q.title}</h4>
+      <p>${q.questions.length} questions</p>
+      ${best !== undefined ? `<div style="margin-top:8px;font-size:.78rem;color:var(--accent2);">Best: ${best}/${q.questions.length}</div>` : ''}
+    </div>`;
+  }).join('');
+}
+function startRandomQuiz() {
+  const q = QUIZZES[Math.floor(Math.random() * QUIZZES.length)];
+  startQuiz(q.id);
+}
+function startQuiz(id) {
+  currentQuiz = QUIZZES.find(q => q.id === id);
+  currentQIdx = 0; quizScore = 0; quizAnswered = false;
+  document.getElementById('quiz-home').style.display = 'none';
+  document.getElementById('quiz-active').style.display = '';
+  document.getElementById('quiz-section-label').textContent = currentQuiz.section;
+  document.getElementById('quiz-title').textContent = currentQuiz.title;
+  renderQuestion();
+}
+function renderQuestion() {
+  if (currentQIdx >= currentQuiz.questions.length) { renderQuizResult(); return; }
+  const q = currentQuiz.questions[currentQIdx];
+  quizAnswered = false;
+  document.getElementById('quiz-area').innerHTML = `
+    <div class="quiz-progress">Question ${currentQIdx+1} of ${currentQuiz.questions.length} · Score: ${quizScore}</div>
+    <div class="quiz-q">${q.q}</div>
+    <div class="quiz-options">
+      ${q.opts.map((o, i) => `<button class="quiz-opt" onclick="answerQuiz(${i})" id="qopt-${i}">${o}</button>`).join('')}
+    </div>
+    <div id="quiz-exp" style="display:none;" class="quiz-explanation"></div>
+    <div id="quiz-next-btn" style="display:none;margin-top:12px;">
+      <button class="btn btn-primary" onclick="nextQuestion()">Next Question →</button>
+    </div>
+  `;
+}
+function answerQuiz(i) {
+  if (quizAnswered) return;
+  quizAnswered = true;
+  const q = currentQuiz.questions[currentQIdx];
+  const opts = document.querySelectorAll('.quiz-opt');
+  opts[i].classList.add(i === q.a ? 'correct' : 'wrong');
+  if (i !== q.a) opts[q.a].classList.add('reveal');
+  if (i === q.a) quizScore++;
+  document.getElementById('quiz-exp').style.display = '';
+  document.getElementById('quiz-exp').textContent = '💡 ' + q.exp;
+  document.getElementById('quiz-next-btn').style.display = '';
+}
+function nextQuestion() { currentQIdx++; renderQuestion(); }
+function renderQuizResult() {
+  const pct = Math.round(quizScore / currentQuiz.questions.length * 100);
+  const prev = state.quizScores[currentQuiz.id] || 0;
+  if (quizScore > prev) { state.quizScores[currentQuiz.id] = quizScore; saveState(); }
+  const emoji = pct >= 80 ? '🏆' : pct >= 60 ? '👍' : '📚';
+  document.getElementById('quiz-area').innerHTML = `
+    <div class="quiz-score">
+      <div style="font-size:2rem;margin-bottom:8px;">${emoji}</div>
+      <div class="score-num">${quizScore}/${currentQuiz.questions.length}</div>
+      <div style="font-size:1.1rem;color:var(--text2);margin:8px 0;">${pct}% correct</div>
+      <div style="color:var(--text2);font-size:.88rem;margin-bottom:24px;">
+        ${pct >= 80 ? 'Excellent! You have solid understanding.' : pct >= 60 ? 'Good effort. Review the missed questions.' : 'Keep studying — revisit the topic and try again.'}
+      </div>
+      <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
+        <button class="btn btn-primary" onclick="startQuiz('${currentQuiz.id}')">Retry Quiz</button>
+        <button class="btn btn-outline" onclick="exitQuiz()">Back to Quizzes</button>
+      </div>
+    </div>
+  `;
+}
+function exitQuiz() { renderQuizHome(); }
+
+// ── THINKING TOOLS ─────────────────────────────────────────────────────────
+function switchTool(name) {
+  document.querySelectorAll('.tool-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tool-panel').forEach(p => p.classList.remove('active'));
+  document.querySelector(`[onclick="switchTool('${name}')"]`).classList.add('active');
+  document.getElementById('tool-' + name).classList.add('active');
+  if (name === 'notes') renderThinkingNotes();
+}
+function saveFeynman() {
+  const concept = document.getElementById('feynman-concept').value.trim();
+  const s1 = document.getElementById('feynman-step1').value.trim();
+  if (!concept || !s1) { toast('Fill in the concept and at least Step 1.'); return; }
+  state.thinkingNotes.unshift({
+    type: 'Feynman', date: today(), title: concept,
+    body: [s1, document.getElementById('feynman-step2').value, document.getElementById('feynman-step3').value, document.getElementById('feynman-step4').value].filter(Boolean).join('\n\n— — —\n\n')
+  });
+  saveState();
+  ['feynman-concept','feynman-step1','feynman-step2','feynman-step3','feynman-step4'].forEach(id => document.getElementById(id).value = '');
+  toast('Feynman note saved! 🧠');
+}
+function selectConfidence(n) {
+  selectedConfidence = n;
+  for (let i = 1; i <= 5; i++) {
+    const btn = document.getElementById('conf-' + i);
+    btn.classList.toggle('correct', i === n);
+    btn.classList.toggle('quiz-opt', true);
+  }
+}
+function saveReflection() {
+  const q1 = document.getElementById('ref-q1').value.trim();
+  if (!q1) { toast('Fill in at least the first question.'); return; }
+  state.thinkingNotes.unshift({
+    type: 'Reflection', date: today(), title: 'Daily Reflection',
+    body: [
+      q1 && '📌 Key insight: ' + q1,
+      document.getElementById('ref-q2').value && '🏥 Clinical connection: ' + document.getElementById('ref-q2').value,
+      document.getElementById('ref-q3').value && '🔄 Next time: ' + document.getElementById('ref-q3').value,
+      selectedConfidence && '⭐ Confidence: ' + selectedConfidence + '/5 — ' + document.getElementById('ref-q4').value,
+    ].filter(Boolean).join('\n\n')
+  });
+  saveState();
+  ['ref-q1','ref-q2','ref-q3','ref-q4'].forEach(id => document.getElementById(id).value = '');
+  selectedConfidence = null;
+  for (let i = 1; i <= 5; i++) document.getElementById('conf-'+i).className = 'quiz-opt';
+  toast('Reflection saved! 💭');
+}
+function addConcept() {
+  const inp = document.getElementById('concept-input');
+  const val = inp.value.trim();
+  if (!val) return;
+  concepts.push(val);
+  inp.value = '';
+  const map = document.getElementById('concept-map');
+  document.getElementById('concept-placeholder')?.remove();
+  const node = document.createElement('div');
+  node.className = 'concept-node';
+  node.textContent = val;
+  map.appendChild(node);
+}
+function saveConcepts() {
+  if (!concepts.length) { toast('Add at least one concept.'); return; }
+  state.thinkingNotes.unshift({
+    type: 'Concept Map', date: today(), title: 'Concept Map',
+    body: 'Concepts: ' + concepts.join(', ') + '\n\n' + (document.getElementById('concept-connections').value || '')
+  });
+  saveState();
+  concepts.length = 0;
+  document.getElementById('concept-map').innerHTML = '<div style="color:var(--text2);font-size:.85rem;text-align:center;padding-top:60px;" id="concept-placeholder">Add concepts above to build your map</div>';
+  document.getElementById('concept-connections').value = '';
+  toast('Concept map saved! 🗺️');
+}
+function renderThinkingNotes() {
+  const list = document.getElementById('saved-notes-list');
+  if (!state.thinkingNotes.length) {
+    list.innerHTML = '<div class="empty-state"><div class="icon">🧠</div><div>No thinking notes yet. Use Feynman, Reflection, or Concept Builder.</div></div>';
+    return;
+  }
+  list.innerHTML = state.thinkingNotes.map((n, i) => `
+    <div class="saved-note">
+      <div class="note-meta">${n.type} · ${formatDate(n.date)} <button onclick="deleteNote(${i})" style="background:none;border:none;color:var(--accent3);cursor:pointer;float:right;font-size:.9rem;">×</button></div>
+      <strong>${n.title}</strong>
+      <div style="margin-top:8px;white-space:pre-wrap;">${n.body}</div>
+    </div>
+  `).join('');
+}
+function deleteNote(i) {
+  state.thinkingNotes.splice(i, 1);
+  saveState();
+  renderThinkingNotes();
+}
+function clearAllNotes() {
+  if (!confirm('Delete all thinking notes?')) return;
+  state.thinkingNotes = [];
+  saveState();
+  renderThinkingNotes();
+}
+
+// ── REMINDERS ─────────────────────────────────────────────────────────────
+function renderReminders() {
+  document.getElementById('reminder-toggle').checked = state.reminder.enabled;
+  document.getElementById('reminder-time').value = state.reminder.time;
+  document.getElementById('reminder-msg').value = state.reminder.msg;
+  document.getElementById('goal-hours').value = state.goals.hours;
+  if (state.startDate) document.getElementById('start-date').value = state.startDate;
+  updateNotifStatus();
+  updateReminderStatus();
+}
+function updateNotifStatus() {
+  const s = document.getElementById('notif-perm-status');
+  const p = Notification.permission;
+  s.textContent = p === 'granted' ? '✓ Enabled' : p === 'denied' ? '✗ Blocked — allow in browser settings' : 'Not yet requested';
+  s.style.color = p === 'granted' ? 'var(--accent2)' : 'var(--accent3)';
+}
+function updateReminderStatus() {
+  const s = document.getElementById('reminder-status');
+  if (state.reminder.enabled) {
+    s.textContent = `✓ Reminder set for ${state.reminder.time} daily`;
+    s.style.color = 'var(--accent2)';
+  } else {
+    s.textContent = 'Reminder is off';
+    s.style.color = 'var(--text2)';
+  }
+}
+async function requestNotifPerm() {
+  if (!('Notification' in window)) { toast('Notifications not supported in this browser.'); return; }
+  const p = await Notification.requestPermission();
+  updateNotifStatus();
+  if (p === 'granted') toast('Notifications enabled! ✓');
+  else toast('Permission denied. Enable in browser settings.');
+}
+function toggleReminder() {
+  state.reminder.enabled = document.getElementById('reminder-toggle').checked;
+  saveState();
+  setupReminderCheck();
+  updateReminderStatus();
+}
+function saveReminder() {
+  state.reminder.time = document.getElementById('reminder-time').value;
+  state.reminder.msg = document.getElementById('reminder-msg').value;
+  saveState();
+  setupReminderCheck();
+  toast('Reminder saved!');
+  updateReminderStatus();
+}
+function saveGoals() {
+  state.goals.hours = parseFloat(document.getElementById('goal-hours').value) || 2;
+  saveState();
+  toast('Goals saved!');
+}
+function saveStartDate() {
+  state.startDate = document.getElementById('start-date').value;
+  DB.set('startDate', state.startDate);
+  toast('Start date updated!');
+}
+function setupReminderCheck() {
+  if (reminderInterval) clearInterval(reminderInterval);
+  if (!state.reminder.enabled) return;
+  reminderInterval = setInterval(() => {
+    if (Notification.permission !== 'granted') return;
+    const now = new Date();
+    const hhmm = now.getHours().toString().padStart(2,'0') + ':' + now.getMinutes().toString().padStart(2,'0');
+    if (hhmm === state.reminder.time) {
+      const studiedToday = state.logs.some(l => l.date === today());
+      if (!studiedToday) {
+        new Notification('Clinical AI Study Tracker', {
+          body: state.reminder.msg,
+          icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><text y="28" font-size="28">🧠</text></svg>'
+        });
+      }
+    }
+  }, 60000);
+}
+
+// ── INIT ──────────────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  getStartDate();
+  renderDashboard();
+  setupReminderCheck();
+  if (Notification.permission !== 'granted' && state.reminder.enabled) {
+    Notification.requestPermission();
+  }
+});
+</script>
+</body>
+</html>
