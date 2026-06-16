@@ -605,102 +605,109 @@ const CURRICULUM = [
 
 // ── DAILY PLAN (90 days) ───────────────────────────────────────────────────
 const DAILY_PLAN = {
-  1:  { f: 'What clinical AI is and where it sits in healthcare; types — predictive, diagnostic, generative.', m: 'Topol, Deep Medicine (ch. 1–2)' },
-  2:  { f: 'History of medical AI: expert systems (MYCIN), the AI winters, the deep learning era, today\'s LLMs.', m: 'NEJM 2019 "Machine learning in medicine" (Rajkomar/Dean/Kohane)' },
-  3:  { f: 'The clinical AI lifecycle: problem → data → model → validation → deployment → monitoring.', m: 'WHO "Ethics & governance of AI for health" (intro)' },
-  4:  { f: 'EHR data: structured (labs, vitals, meds, ICD/CPT) vs unstructured (clinical notes).', m: 'MIMIC-IV documentation (MIT-LCP)' },
-  5:  { f: 'Medical imaging (DICOM) and waveform/signal data (ECG, EEG).', m: '"DICOM basics" primer; MIMIC-IV-ECG overview' },
-  6:  { f: 'Genomics & -omics data; claims data; wearables / remote patient monitoring.', m: 'Fundamentals of Clinical Data Science (open-access, Springer)' },
-  7:  { f: 'HL7 v2 vs FHIR; why interoperability matters in practice.', m: 'HL7 FHIR official docs (hl7.org/fhir)' },
-  8:  { f: 'FHIR resources (Patient, Observation, Condition, Encounter); REST API basics.', m: 'SMART on FHIR tutorials; HAPI FHIR sandbox' },
-  9:  { f: 'Clinical terminologies: ICD-10, SNOMED CT, LOINC, RxNorm.', m: 'SNOMED CT starter guide; LOINC overview' },
-  10: { f: 'NLP basics: tokenization, stopwords, stemming; clinical text quirks (abbreviations, negation).', m: 'Stanford CS224N early lectures' },
-  11: { f: 'Named entity recognition, negation detection (NegEx), de-identification.', m: 'medspaCy GitHub tutorials' },
-  12: { f: 'Clinical NLP tooling: spaCy/medspaCy, cTAKES, scispaCy.', m: 'scispaCy docs; i2b2 NLP challenge overviews' },
-  13: { f: 'How images become tensors; convolution intuition.', m: 'fast.ai Practical Deep Learning (lesson 1)' },
-  14: { f: 'CNN architectures (ResNet, U-Net); classification vs segmentation vs detection.', m: 'fast.ai (lessons 2–3)' },
-  15: { f: 'Imaging modalities & tasks (CXR, CT, MRI, pathology slides).', m: 'CheXpert dataset paper; Nature Medicine imaging review' },
-  16: { f: 'Supervised vs unsupervised learning; train/val/test splits; overfitting.', m: 'Andrew Ng ML Specialization (Coursera)' },
-  17: { f: 'Clinical metrics: sensitivity, specificity, PPV/NPV, AUC-ROC, AUC-PR.', m: 'Google ML Crash Course (classification)' },
-  18: { f: 'Class imbalance (rare disease), calibration, decision thresholds.', m: '"A clinician\'s guide to AI" (calibration sections)' },
-  19: { f: 'Data leakage, missingness, temporal validation.', m: 'scikit-learn user guide (model evaluation)' },
-  20: { f: 'Logistic regression and decision trees as clinical baselines.', m: 'scikit-learn linear & tree docs' },
-  21: { f: 'Random forests and gradient boosting (XGBoost) for tabular EHR.', m: 'XGBoost docs' },
-  22: { f: 'Build a risk model end-to-end on a sample dataset.', m: 'MIMIC mortality-prediction tutorial' },
-  23: { f: 'k-means, hierarchical clustering; PCA for dimensionality reduction.', m: 'scikit-learn clustering docs' },
-  24: { f: 't-SNE / UMAP for patient phenotyping.', m: 'UMAP docs; computational phenotyping paper' },
-  25: { f: 'Anomaly detection for outlier patients/events.', m: 'scikit-learn outlier detection guide' },
-  26: { f: 'Neural net fundamentals: layers, activation, backprop, loss.', m: '3Blue1Brown neural-net series' },
-  27: { f: 'Training mechanics: optimizers, regularization, dropout.', m: 'DeepLearning.AI Specialization (course 2)' },
-  28: { f: 'CNNs for imaging recap; RNNs/LSTMs for sequential vitals.', m: 'DeepLearning.AI (sequence models)' },
-  29: { f: 'Transfer learning & data augmentation in low-data clinical settings.', m: 'fast.ai transfer learning lesson' },
-  30: { f: 'The attention mechanism & transformer architecture.', m: '"Attention Is All You Need" + The Illustrated Transformer' },
-  31: { f: 'BERT → ClinicalBERT / BioBERT; embeddings for clinical text.', m: 'ClinicalBERT paper' },
-  32: { f: 'GPT-style models; prompting; RAG over clinical knowledge.', m: 'Med-PaLM paper; RAG primer' },
-  33: { f: 'LLM risks: hallucination, prompt injection, evaluation.', m: 'GPT-4 USMLE paper; LLM eval surveys' },
-  34: { f: 'Sources of bias: sampling, label, measurement, deployment.', m: 'WHO AI ethics report (bias section)' },
-  35: { f: 'Case study — Obermeyer et al. 2019 (cost-as-proxy racial bias).', m: 'Obermeyer 2019 (Science)' },
-  36: { f: 'Subgroup performance analysis & model auditing.', m: 'Fairlearn toolkit docs' },
-  37: { f: 'Fairness definitions (demographic parity, equalized odds) and trade-offs.', m: 'Fairlearn fairness metrics guide' },
-  38: { f: 'Model cards and datasheets for datasets.', m: '"Model Cards" (Mitchell); "Datasheets for Datasets" (Gebru)' },
-  39: { f: 'Accountability frameworks & AI governance.', m: 'WHO AI governance chapter' },
-  40: { f: 'HIPAA: PHI, Safe Harbor (18 identifiers), Expert Determination.', m: 'HHS HIPAA summary' },
-  41: { f: 'GDPR & international health-data rules; consent.', m: 'GDPR Art. 9 (health data)' },
-  42: { f: 'De-identification in practice.', m: 'NIST/HHS de-identification guidance' },
-  43: { f: 'Software as a Medical Device (SaMD); 510(k) vs De Novo vs PMA.', m: 'FDA AI/ML SaMD Action Plan' },
-  44: { f: 'Predetermined Change Control Plans; locked vs adaptive algorithms.', m: 'FDA PCCP guidance' },
-  45: { f: 'Review the FDA list of cleared AI/ML devices.', m: 'FDA database of cleared AI/ML devices' },
-  46: { f: 'Why explainability matters clinically; global vs local explanations.', m: 'Interpretable ML (Molnar, ch. 1–2)' },
-  47: { f: 'SHAP and LIME for tabular models.', m: 'SHAP docs + "A Unified Approach to Interpreting Predictions"' },
-  48: { f: 'Saliency maps / Grad-CAM for imaging models.', m: 'Grad-CAM paper' },
-  49: { f: 'AI in radiology: CXR triage and reporting.', m: 'CheXNet paper' },
-  50: { f: 'CT applications: stroke, PE, intracranial hemorrhage detection.', m: 'Aidoc / Viz.ai case studies' },
-  51: { f: 'MRI applications and radiology workflow integration.', m: 'Nature Medicine radiology AI review' },
-  52: { f: 'Digital pathology: whole-slide imaging.', m: 'CAMELYON16/17 challenge papers' },
-  53: { f: 'Genomics: variant calling and polygenic risk scores.', m: 'DeepVariant overview' },
-  54: { f: 'Protein structure & drug targets.', m: 'AlphaFold2 (Nature 2021)' },
-  55: { f: 'Clinical Decision Support Systems: design & the "5 rights" of CDS.', m: 'AHRQ CDS resources' },
-  56: { f: 'Alert design and alert fatigue.', m: 'Review on alert fatigue (JAMIA)' },
-  57: { f: 'Integrating CDS into the EHR workflow.', m: 'SMART on FHIR CDS Hooks' },
-  58: { f: 'Early warning scores (NEWS2) and clinical deterioration.', m: 'NEWS2 (RCP) documentation' },
-  59: { f: 'Sepsis prediction: the Epic Sepsis Model controversy.', m: 'Epic Sepsis Model external validation (JAMA IM 2021)' },
-  60: { f: 'ICU AI models; TREWS and continuous monitoring.', m: 'MIMIC sepsis cohort; TREWS paper' },
-  61: { f: 'AI in drug discovery: target ID and molecule generation.', m: 'Reviews on ML for drug discovery' },
-  62: { f: 'Pharmacogenomics and precision oncology.', m: 'Precision medicine review (Nature)' },
-  63: { f: 'Putting it together: AI across the drug & treatment pipeline.', m: 'Case studies; recap notes' },
-  64: { f: 'MLOps basics: model serving, latency, versioning.', m: 'MLOps primer; "Hidden Technical Debt in ML" (Sculley)' },
-  65: { f: 'EHR integration; silent vs live deployment.', m: 'Deployment case studies' },
-  66: { f: 'Reproducibility, packaging, and rollback strategy.', m: 'MLflow / model registry docs' },
-  67: { f: 'Prospective vs retrospective studies; external validation.', m: 'TRIPOD-AI guideline' },
-  68: { f: 'Reporting standards for clinical AI.', m: 'CONSORT-AI, SPIRIT-AI, DECIDE-AI' },
-  69: { f: 'Risk of bias assessment in prediction models.', m: 'PROBAST tool' },
-  70: { f: 'Human-AI collaboration; automation bias.', m: 'Papers on automation bias' },
-  71: { f: 'Clinician trust and workflow fit.', m: 'Hannah Fry, Hello World (accessible)' },
-  72: { f: 'Human-in-the-loop design patterns.', m: 'HCI for clinical AI readings' },
-  73: { f: 'Data drift and concept drift.', m: '"Dataset Shift in Machine Learning"' },
-  74: { f: 'Performance decay and retraining strategies.', m: 'Monitoring case studies' },
-  75: { f: 'Production monitoring & alerting for clinical models.', m: 'ML monitoring tool docs (e.g. Evidently)' },
-  76: { f: 'Real-world evidence (RWE) and its uses.', m: 'FDA RWE framework' },
-  77: { f: 'Post-market surveillance & incident reporting.', m: 'Post-market AI surveillance literature' },
-  78: { f: 'Auditing deployed models over time.', m: 'Algorithmic auditing frameworks' },
-  79: { f: 'Literature review: survey 2023–2025 clinical AI; start a bibliography.', m: 'PubMed, arXiv (cs.LG/q-bio), NEJM AI' },
-  80: { f: 'Deep dive into 2–3 landmark recent papers.', m: 'Nature Medicine; your saved reading list' },
-  81: { f: 'Synthesize themes & open problems into notes.', m: 'Your Thinking Tools notes' },
-  82: { f: 'Case study: a clinical AI success — what worked and why.', m: 'Published deployment reports' },
-  83: { f: 'Case study: a failure (e.g. IBM Watson Oncology) — root causes.', m: 'Post-mortem articles' },
-  84: { f: 'Extract transferable lessons from both.', m: 'Write-up in your reflection tool' },
-  85: { f: 'Mini project: pick a task (e.g. readmission/mortality), set up data.', m: 'MIMIC-IV demo (no credentialing); Kaggle health datasets' },
-  86: { f: 'Train and validate your model; check subgroup performance.', m: 'scikit-learn / XGBoost; Fairlearn' },
-  87: { f: 'Document your project (a model card + README).', m: 'Model card template' },
-  88: { f: 'Certification prep: consolidate notes, review weak quiz areas.', m: 'Your quiz results + notes in this app' },
-  89: { f: 'Mock self-test and final knowledge synthesis.', m: 'Re-take quizzes; Feynman the hard topics' },
-  90: { f: 'Reflection, portfolio finalization & next-steps plan.', m: 'Your learning narrative; post-90-day roadmap' },
+  1:  { f: 'What clinical AI is and where it sits in healthcare; types — predictive, diagnostic, generative. Read the landmark overview of high-performance medicine.', links: [{t:'Nature Med: High-performance medicine (Topol 2019)', u:'https://www.nature.com/articles/s41591-018-0300-7'}, {t:'WHO: Ethics & governance of AI for health', u:'https://www.who.int/publications/i/item/9789240029200'}] },
+  2:  { f: 'History of medical AI: expert systems (MYCIN), the AI winters, the deep learning era, today\'s LLMs.', links: [{t:'NEJM: Machine Learning in Medicine (Rajkomar 2019)', u:'https://www.nejm.org/doi/full/10.1056/NEJMra1814259'}, {t:'MYCIN expert system (overview)', u:'https://en.wikipedia.org/wiki/Mycin'}] },
+  3:  { f: 'The clinical AI lifecycle: problem → data → model → validation → deployment → monitoring.', links: [{t:'Guide to deep learning in healthcare (Nature Med)', u:'https://www.nature.com/articles/s41591-018-0316-z'}] },
+  4:  { f: 'EHR data: structured (labs, vitals, meds, ICD/CPT codes) vs unstructured (clinical notes). Explore the canonical critical-care dataset.', links: [{t:'MIMIC-IV documentation', u:'https://mimic.mit.edu/'}, {t:'Scalable & accurate deep learning with EHRs', u:'https://www.nature.com/articles/s41746-018-0029-1'}] },
+  5:  { f: 'Medical imaging (DICOM) and waveform/signal data (ECG, EEG).', links: [{t:'DICOM standard (official)', u:'https://www.dicomstandard.org/'}, {t:'MIMIC-IV-ECG dataset', u:'https://physionet.org/content/mimic-iv-ecg/'}] },
+  6:  { f: 'Genomics & -omics data; claims data; wearables / remote patient monitoring.', links: [{t:'Fundamentals of Clinical Data Science (free, Springer)', u:'https://link.springer.com/book/10.1007/978-3-319-99713-1'}] },
+  7:  { f: 'HL7 v2 vs FHIR; why interoperability matters in practice.', links: [{t:'HL7 FHIR — official site', u:'https://www.hl7.org/fhir/'}, {t:'FHIR overview', u:'https://www.hl7.org/fhir/overview.html'}] },
+  8:  { f: 'FHIR resources (Patient, Observation, Condition, Encounter); REST API basics.', links: [{t:'SMART on FHIR docs', u:'https://docs.smarthealthit.org/'}, {t:'HAPI FHIR (open-source server)', u:'https://hapifhir.io/'}] },
+  9:  { f: 'Clinical terminologies: ICD-10, SNOMED CT, LOINC, RxNorm.', links: [{t:'SNOMED CT', u:'https://www.snomed.org/'}, {t:'LOINC', u:'https://loinc.org/'}, {t:'RxNorm (NLM)', u:'https://www.nlm.nih.gov/research/umls/rxnorm/index.html'}] },
+  10: { f: 'NLP basics: tokenization, stopwords, stemming; clinical text quirks (abbreviations, negation).', links: [{t:'Stanford CS224N (NLP with Deep Learning)', u:'https://web.stanford.edu/class/cs224n/'}] },
+  11: { f: 'Named entity recognition, negation detection (NegEx), de-identification.', links: [{t:'medspaCy (clinical NLP toolkit)', u:'https://github.com/medspacy/medspacy'}] },
+  12: { f: 'Clinical NLP tooling: spaCy/medspaCy, cTAKES, scispaCy. Practice on benchmark datasets.', links: [{t:'scispaCy', u:'https://allenai.github.io/scispacy/'}, {t:'n2c2 / i2b2 NLP datasets', u:'https://www.i2b2.org/NLP/DataSets/'}] },
+  13: { f: 'How images become tensors; convolution intuition.', links: [{t:'fast.ai — Practical Deep Learning (Lesson 1)', u:'https://course.fast.ai/'}, {t:'CNN explainer (interactive)', u:'https://poloclub.github.io/cnn-explainer/'}] },
+  14: { f: 'CNN architectures (ResNet, U-Net); classification vs segmentation vs detection.', links: [{t:'U-Net paper', u:'https://arxiv.org/abs/1505.04597'}, {t:'ResNet paper', u:'https://arxiv.org/abs/1512.03385'}] },
+  15: { f: 'Imaging modalities & tasks (CXR, CT, MRI, pathology slides). Explore a large public chest X-ray dataset.', links: [{t:'CheXpert dataset', u:'https://stanfordmlgroup.github.io/competitions/chexpert/'}] },
+  16: { f: 'Supervised vs unsupervised learning; train/val/test splits; overfitting.', links: [{t:'Andrew Ng — ML Specialization (Coursera)', u:'https://www.coursera.org/specializations/machine-learning-introduction'}] },
+  17: { f: 'Clinical metrics: sensitivity, specificity, PPV/NPV, AUC-ROC, AUC-PR.', links: [{t:'Google ML Crash Course — Classification', u:'https://developers.google.com/machine-learning/crash-course/classification/accuracy-precision-recall'}] },
+  18: { f: 'Class imbalance (rare disease), probability calibration, decision thresholds.', links: [{t:'scikit-learn: calibration', u:'https://scikit-learn.org/stable/modules/calibration.html'}, {t:'Imbalanced-learn docs', u:'https://imbalanced-learn.org/stable/'}] },
+  19: { f: 'Data leakage, missingness, temporal validation.', links: [{t:'scikit-learn: cross-validation & pitfalls', u:'https://scikit-learn.org/stable/common_pitfalls.html'}] },
+  20: { f: 'Logistic regression and decision trees as clinical baselines.', links: [{t:'scikit-learn: supervised learning guide', u:'https://scikit-learn.org/stable/supervised_learning.html'}] },
+  21: { f: 'Random forests and gradient boosting (XGBoost) for tabular EHR.', links: [{t:'XGBoost documentation', u:'https://xgboost.readthedocs.io/en/stable/'}] },
+  22: { f: 'Build a risk model end-to-end on a sample dataset.', links: [{t:'MIT-LCP mimic-code (tutorials & SQL)', u:'https://github.com/MIT-LCP/mimic-code'}] },
+  23: { f: 'k-means, hierarchical clustering; PCA for dimensionality reduction.', links: [{t:'scikit-learn: clustering', u:'https://scikit-learn.org/stable/modules/clustering.html'}] },
+  24: { f: 't-SNE / UMAP for patient phenotyping.', links: [{t:'UMAP documentation', u:'https://umap-learn.readthedocs.io/'}] },
+  25: { f: 'Anomaly detection for outlier patients/events.', links: [{t:'scikit-learn: outlier detection', u:'https://scikit-learn.org/stable/modules/outlier_detection.html'}] },
+  26: { f: 'Neural net fundamentals: layers, activation, backprop, loss.', links: [{t:'3Blue1Brown — Neural Networks (video series)', u:'https://www.3blue1brown.com/topics/neural-networks'}] },
+  27: { f: 'Training mechanics: optimizers, regularization, dropout.', links: [{t:'DeepLearning.AI Specialization (Coursera)', u:'https://www.coursera.org/specializations/deep-learning'}] },
+  28: { f: 'CNNs for imaging recap; RNNs/LSTMs for sequential vitals.', links: [{t:'Understanding LSTMs (Colah)', u:'https://colah.github.io/posts/2015-08-Understanding-LSTMs/'}] },
+  29: { f: 'Transfer learning & data augmentation in low-data clinical settings.', links: [{t:'CS231n: transfer learning', u:'https://cs231n.github.io/transfer-learning/'}] },
+  30: { f: 'The attention mechanism & transformer architecture.', links: [{t:'Attention Is All You Need (paper)', u:'https://arxiv.org/abs/1706.03762'}, {t:'The Illustrated Transformer', u:'https://jalammar.github.io/illustrated-transformer/'}] },
+  31: { f: 'BERT → ClinicalBERT / BioBERT; embeddings for clinical text.', links: [{t:'ClinicalBERT (Alsentzer et al.)', u:'https://arxiv.org/abs/1904.03323'}, {t:'BioBERT', u:'https://arxiv.org/abs/1901.08746'}] },
+  32: { f: 'GPT-style models; prompting; RAG over clinical knowledge.', links: [{t:'Med-PaLM (Nature 2023)', u:'https://www.nature.com/articles/s41586-023-06291-2'}] },
+  33: { f: 'LLM risks: hallucination, prompt injection, evaluation.', links: [{t:'Capabilities of GPT-4 on Medical Problems (Nori)', u:'https://arxiv.org/abs/2303.13375'}] },
+  34: { f: 'Sources of bias: sampling, label, measurement, deployment.', links: [{t:'Ensuring fairness in ML for health (review)', u:'https://www.nature.com/articles/s41591-021-01595-0'}] },
+  35: { f: 'Case study — racial bias in a widely-used risk algorithm.', links: [{t:'Obermeyer et al. 2019 (Science)', u:'https://www.science.org/doi/10.1126/science.aax2342'}] },
+  36: { f: 'Subgroup performance analysis & model auditing.', links: [{t:'Fairlearn (toolkit)', u:'https://fairlearn.org/'}] },
+  37: { f: 'Fairness definitions (demographic parity, equalized odds) and trade-offs.', links: [{t:'Fairlearn: fairness metrics', u:'https://fairlearn.org/main/user_guide/assessment/index.html'}] },
+  38: { f: 'Model cards and datasheets for datasets.', links: [{t:'Model Cards (Mitchell et al.)', u:'https://arxiv.org/abs/1810.03993'}, {t:'Datasheets for Datasets (Gebru)', u:'https://arxiv.org/abs/1803.09010'}] },
+  39: { f: 'Accountability frameworks & AI governance.', links: [{t:'WHO: Ethics & governance of AI for health', u:'https://www.who.int/publications/i/item/9789240029200'}] },
+  40: { f: 'HIPAA: PHI, Safe Harbor (18 identifiers), Expert Determination.', links: [{t:'HHS: HIPAA de-identification guidance', u:'https://www.hhs.gov/hipaa/for-professionals/special-topics/de-identification/index.html'}] },
+  41: { f: 'GDPR & international health-data rules; consent.', links: [{t:'GDPR Article 9 (health data)', u:'https://gdpr-info.eu/art-9-gdpr/'}] },
+  42: { f: 'De-identification in practice for clinical text & data.', links: [{t:'HHS de-identification methods', u:'https://www.hhs.gov/hipaa/for-professionals/special-topics/de-identification/index.html'}] },
+  43: { f: 'Software as a Medical Device (SaMD); 510(k) vs De Novo vs PMA.', links: [{t:'FDA: AI/ML-Based SaMD', u:'https://www.fda.gov/medical-devices/software-medical-device-samd/artificial-intelligence-and-machine-learning-software-medical-device'}] },
+  44: { f: 'Predetermined Change Control Plans; locked vs adaptive algorithms.', links: [{t:'FDA: PCCP guidance for AI devices', u:'https://www.fda.gov/regulatory-information/search-fda-guidance-documents/marketing-submission-recommendations-predetermined-change-control-plan-artificial-intelligence'}] },
+  45: { f: 'Review the FDA list of cleared AI/ML medical devices.', links: [{t:'FDA: AI/ML-enabled devices list', u:'https://www.fda.gov/medical-devices/software-medical-device-samd/artificial-intelligence-and-machine-learning-aiml-enabled-medical-devices'}] },
+  46: { f: 'Why explainability matters clinically; global vs local explanations.', links: [{t:'Interpretable ML (Molnar — free book)', u:'https://christophm.github.io/interpretable-ml-book/'}] },
+  47: { f: 'SHAP and LIME for tabular models.', links: [{t:'SHAP docs', u:'https://shap.readthedocs.io/'}, {t:'A Unified Approach (SHAP paper)', u:'https://arxiv.org/abs/1705.07874'}] },
+  48: { f: 'Saliency maps / Grad-CAM for imaging models.', links: [{t:'Grad-CAM paper', u:'https://arxiv.org/abs/1610.02391'}] },
+  49: { f: 'AI in radiology: CXR triage and reporting.', links: [{t:'CheXNet (Rajpurkar et al.)', u:'https://arxiv.org/abs/1711.05225'}] },
+  50: { f: 'CT applications: stroke, PE, intracranial hemorrhage detection.', links: [{t:'Deep learning for ICH detection (Lancet)', u:'https://www.thelancet.com/journals/lancet/article/PIIS0140-6736(18)31645-3/fulltext'}] },
+  51: { f: 'MRI applications and radiology workflow integration.', links: [{t:'AI in radiology (Nature Reviews)', u:'https://www.nature.com/articles/s41568-018-0016-5'}] },
+  52: { f: 'Digital pathology: whole-slide imaging.', links: [{t:'CAMELYON17 challenge', u:'https://camelyon17.grand-challenge.org/'}] },
+  53: { f: 'Genomics: variant calling and polygenic risk scores.', links: [{t:'DeepVariant (Google)', u:'https://github.com/google/deepvariant'}] },
+  54: { f: 'Protein structure & drug targets.', links: [{t:'AlphaFold2 (Nature 2021)', u:'https://www.nature.com/articles/s41586-021-03819-2'}] },
+  55: { f: 'Clinical Decision Support Systems: design & the "5 rights" of CDS.', links: [{t:'AHRQ: Clinical Decision Support', u:'https://www.ahrq.gov/cpi/about/otherwebsites/clinical-decision-support/index.html'}] },
+  56: { f: 'Alert design and alert fatigue.', links: [{t:'Alert fatigue (review)', u:'https://academic.oup.com/jamia/article/19/1/121/732254'}] },
+  57: { f: 'Integrating CDS into the EHR workflow.', links: [{t:'CDS Hooks', u:'https://cds-hooks.org/'}] },
+  58: { f: 'Early warning scores (NEWS2) and clinical deterioration.', links: [{t:'NEWS2 (Royal College of Physicians)', u:'https://www.rcp.ac.uk/improving-care/resources/national-early-warning-score-news-2/'}] },
+  59: { f: 'Sepsis prediction: the Epic Sepsis Model controversy.', links: [{t:'External validation of Epic Sepsis Model (JAMA IM 2021)', u:'https://jamanetwork.com/journals/jamainternalmedicine/fullarticle/2781307'}] },
+  60: { f: 'ICU AI models; sepsis early-warning in deployment.', links: [{t:'TREWS sepsis system (Nature Med 2022)', u:'https://www.nature.com/articles/s41591-022-01894-0'}] },
+  61: { f: 'AI in drug discovery: target ID and molecule generation.', links: [{t:'ML in drug discovery (Nature Reviews Drug Discovery)', u:'https://www.nature.com/articles/s41573-019-0024-5'}] },
+  62: { f: 'Pharmacogenomics and precision oncology.', links: [{t:'AI in precision oncology (review)', u:'https://www.nature.com/articles/s41571-019-0252-y'}] },
+  63: { f: 'Synthesize: AI across the drug & treatment pipeline. Recap and write notes.', links: [{t:'Use the Thinking Tools tab', u:'https://pubmed.ncbi.nlm.nih.gov/'}] },
+  64: { f: 'MLOps basics: model serving, latency, versioning, technical debt.', links: [{t:'Hidden Technical Debt in ML Systems (NeurIPS)', u:'https://papers.nips.cc/paper/2015/hash/86df7dcfd896fcaf2674f757a2463eba-Abstract.html'}] },
+  65: { f: 'EHR integration; silent vs live deployment.', links: [{t:'The clinician and dataset shift in AI (NEJM)', u:'https://www.nejm.org/doi/full/10.1056/NEJMc2104626'}] },
+  66: { f: 'Reproducibility, packaging, and rollback strategy.', links: [{t:'MLflow documentation', u:'https://mlflow.org/docs/latest/index.html'}] },
+  67: { f: 'Prospective vs retrospective studies; external validation.', links: [{t:'TRIPOD+AI statement', u:'https://www.bmj.com/content/385/bmj-2023-078378'}] },
+  68: { f: 'Reporting standards for clinical AI trials.', links: [{t:'CONSORT-AI (Nature Med)', u:'https://www.nature.com/articles/s41591-020-1034-x'}, {t:'DECIDE-AI', u:'https://www.nature.com/articles/s41591-022-01772-9'}] },
+  69: { f: 'Risk-of-bias assessment in prediction models.', links: [{t:'PROBAST tool', u:'https://www.probast.org/'}] },
+  70: { f: 'Human-AI collaboration; automation bias.', links: [{t:'Automation bias (JAMIA)', u:'https://academic.oup.com/jamia/article/19/1/121/732254'}] },
+  71: { f: 'Clinician trust and workflow fit.', links: [{t:'Hello World — Hannah Fry (book)', u:'https://www.penguin.co.uk/books/307703/hello-world-by-fry-hannah/9781784163068'}] },
+  72: { f: 'Human-in-the-loop design patterns.', links: [{t:'Human-centered AI in healthcare (npj Digital Med)', u:'https://www.nature.com/articles/s41746-020-0254-2'}] },
+  73: { f: 'Data drift and concept drift in deployed models.', links: [{t:'Dataset shift in ML (book, MIT Press)', u:'https://mitpress.mit.edu/9780262170055/dataset-shift-in-machine-learning/'}] },
+  74: { f: 'Performance decay and retraining strategies.', links: [{t:'Model drift in healthcare (npj Digital Med)', u:'https://www.nature.com/articles/s41746-022-00611-y'}] },
+  75: { f: 'Production monitoring & alerting for clinical models.', links: [{t:'Evidently AI (open-source monitoring)', u:'https://www.evidentlyai.com/'}] },
+  76: { f: 'Real-world evidence (RWE) and its regulatory uses.', links: [{t:'FDA: Real-World Evidence', u:'https://www.fda.gov/science-research/science-and-research-special-topics/real-world-evidence'}] },
+  77: { f: 'Post-market surveillance & incident reporting for AI.', links: [{t:'FDA: AI/ML SaMD lifecycle', u:'https://www.fda.gov/medical-devices/software-medical-device-samd/artificial-intelligence-and-machine-learning-software-medical-device'}] },
+  78: { f: 'Auditing deployed models over time.', links: [{t:'Algorithmic auditing framework (paper)', u:'https://dl.acm.org/doi/10.1145/3351095.3372873'}] },
+  79: { f: 'Literature review: survey 2023–2025 clinical AI; start a bibliography.', links: [{t:'PubMed', u:'https://pubmed.ncbi.nlm.nih.gov/'}, {t:'NEJM AI', u:'https://ai.nejm.org/'}] },
+  80: { f: 'Deep dive into 2–3 landmark recent papers.', links: [{t:'arXiv (cs.LG)', u:'https://arxiv.org/list/cs.LG/recent'}, {t:'Nature Medicine', u:'https://www.nature.com/nm/'}] },
+  81: { f: 'Synthesize themes & open problems into notes (use the Thinking Tools tab).', links: [{t:'Google Scholar', u:'https://scholar.google.com/'}] },
+  82: { f: 'Case study: a clinical AI success — what worked and why.', links: [{t:'Diabetic retinopathy AI (JAMA, Gulshan)', u:'https://jamanetwork.com/journals/jama/fullarticle/2588763'}] },
+  83: { f: 'Case study: a failure — IBM Watson for Oncology, root causes.', links: [{t:'STAT: IBM Watson recommended unsafe treatments', u:'https://www.statnews.com/2018/07/25/ibm-watson-recommended-unsafe-incorrect-treatments/'}] },
+  84: { f: 'Extract transferable lessons from both (write up in the Reflection tool).', links: [{t:'Why AI in medicine fails (npj Digital Med)', u:'https://www.nature.com/articles/s41746-020-0221-y'}] },
+  85: { f: 'Mini project: pick a task (e.g. mortality prediction), set up data.', links: [{t:'MIMIC-IV demo (no credentialing needed)', u:'https://physionet.org/content/mimic-iv-demo/2.2/'}, {t:'Kaggle healthcare datasets', u:'https://www.kaggle.com/datasets?tags=13302-Healthcare'}] },
+  86: { f: 'Train and validate your model; check subgroup performance.', links: [{t:'scikit-learn', u:'https://scikit-learn.org/stable/'}, {t:'Fairlearn', u:'https://fairlearn.org/'}] },
+  87: { f: 'Document your project (a model card + README).', links: [{t:'Hugging Face: Model Cards guide', u:'https://huggingface.co/docs/hub/model-cards'}] },
+  88: { f: 'Certification prep: consolidate notes, review weak quiz areas (use the Quiz tab).', links: [{t:'Coursera: AI in Healthcare Specialization (Stanford)', u:'https://www.coursera.org/specializations/ai-healthcare'}] },
+  89: { f: 'Mock self-test and final knowledge synthesis. Re-take quizzes; Feynman the hard topics.', links: [{t:'Use the Quiz + Thinking Tools tabs', u:'https://www.coursera.org/specializations/ai-healthcare'}] },
+  90: { f: 'Reflection, portfolio finalization & next-steps plan. Write your learning narrative.', links: [{t:'NEJM AI (stay current)', u:'https://ai.nejm.org/'}] },
 };
 
 function dayRangeToNums(days) {
   // "7-9" -> [7,8,9]; "90" -> [90]
   if (days.includes('-')) { const [a,b] = days.split('-').map(Number); return Array.from({length:b-a+1},(_,i)=>a+i); }
   return [Number(days)];
+}
+function renderLinks(plan, label) {
+  if (!plan || !plan.links || !plan.links.length) return '';
+  const links = plan.links.map(l =>
+    `<a href="${l.u}" target="_blank" rel="noopener" onclick="event.stopPropagation()" style="display:inline-block;color:var(--accent2);text-decoration:none;border-bottom:1px solid var(--accent2);margin:3px 10px 3px 0;font-size:.83rem;">🔗 ${l.t}</a>`
+  ).join('');
+  return `<div style="margin-top:6px;"><strong style="color:var(--accent2);font-size:.8rem;">📚 ${label || 'Materials'}:</strong><br>${links}</div>`;
 }
 function topicForDay(day) {
   for (const phase of CURRICULUM) {
@@ -851,7 +858,7 @@ function renderDashboard() {
         Phase ${planTopic.phase} · ${planTopic.name}
       </div>
       <div style="font-size:1.02rem;font-weight:600;line-height:1.5;margin-bottom:10px;">${plan.f}</div>
-      <div style="font-size:.85rem;color:var(--text2);"><strong style="color:var(--accent2);">📚 Materials:</strong> ${plan.m}</div>
+      ${renderLinks(plan)}
     `;
   } else {
     document.getElementById('today-plan-body').innerHTML = '<div class="text-muted">Your 90-day plan is complete! 🎉</div>';
@@ -920,7 +927,7 @@ function renderTopics() {
           <div style="flex-shrink:0;width:54px;font-size:.78rem;font-weight:700;color:var(--accent);">Day ${d}</div>
           <div>
             <div style="font-size:.88rem;line-height:1.5;">${DAILY_PLAN[d].f}</div>
-            <div style="font-size:.78rem;color:var(--text2);margin-top:4px;">📚 ${DAILY_PLAN[d].m}</div>
+            ${renderLinks(DAILY_PLAN[d])}
           </div>
         </div>` : '').join('');
       return `<div class="topic-item${done?' done':''}" id="ti-${t.id}" onclick="toggleTopicDetail('${t.id}',event)" style="display:block;cursor:pointer;">
@@ -1007,8 +1014,7 @@ function openDayModal(day) {
     <div class="chip purple" style="margin-bottom:12px;">Phase ${t.phase} · ${t.name}</div>
     <div style="font-size:.78rem;color:var(--text2);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;">Focus</div>
     <div style="font-size:1rem;line-height:1.6;margin-bottom:16px;">${plan.f}</div>
-    <div style="font-size:.78rem;color:var(--text2);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;">Materials</div>
-    <div style="font-size:.92rem;line-height:1.6;color:var(--accent2);margin-bottom:20px;">📚 ${plan.m}</div>
+    <div style="margin-bottom:20px;">${renderLinks(plan)}</div>
     <div style="padding:14px;background:var(--surface2);border-radius:8px;font-size:.85rem;">
       ${studied
         ? `<strong style="color:var(--accent2);">✓ Studied this day.</strong>${log ? '<br><span style="color:var(--text2);">Logged: ' + log.topic + (log.hours ? ' · ' + log.hours + 'h' : '') + '</span>' : ''}`
